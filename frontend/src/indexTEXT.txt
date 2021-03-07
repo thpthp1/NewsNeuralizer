@@ -4,7 +4,6 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
-//default class component
 class MyClass extends React.Component {
   render() {
     return (
@@ -13,7 +12,6 @@ class MyClass extends React.Component {
   }
 }
 
-//Test function component
 function FunComponent(props) {
   const [userInput, setUserInput] = useState('');
   const [textArea, setTextArea] = useState('');
@@ -46,13 +44,11 @@ function FunComponent(props) {
   );
 }
 
-//The form components for manual user input
-function ManualForm(props) {
+function ObjectComponent(props) {
   const [form, setForm] = useState({
     url: '',
     title: '',
     body: '',
-    category: ''
   });
 
   const handleChange = ({ target }) => {
@@ -90,11 +86,6 @@ function ManualForm(props) {
               <textarea type="text" name="body" onChange={handleChange} className="form-control" placeholder="Insert Article Body Paragraphs" rows="5"></textarea>
             </div>
 
-            <div className="form-group">
-              <label for="category" className="">Category:</label>
-              <input type="text" name="category" onChange={handleChange} className="form-control" placeholder="optional"></input>
-            </div>
-
             <button type="submit" className="btn btn-primary col-md-12 mb-3">Submit Form</button>
           </form>
         </div>
@@ -103,31 +94,9 @@ function ManualForm(props) {
   )
 }
 
-//One article for the news feed
-function Article(props){
-  return(
-    <div className="article">
-        <h1>{props.title}</h1>
-        <p className="probability">{props.probability}</p>
-
-        <p>{props.body}</p>
-
-        <form action={props.url}>
-          <button type="submit">Read More</button>
-        </form>
-    </div>
-  )
-}
-
-function ArticleController(props){
-  return(
-    <Article title="Hi, I'm the title" probability=".9" body="I'm a body text weeeeeeeeee" url="https://google.com"/>
-  )
-}
-
 ReactDOM.render(
   <React.StrictMode>
-    <ArticleController />
+    <ObjectComponent />
   </React.StrictMode>,
   document.getElementById('root')
 );
