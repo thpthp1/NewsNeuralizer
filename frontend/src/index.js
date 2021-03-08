@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ReactDOM, { render } from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import axios from "axios";
 
 //default class component
 class MyClass extends React.Component {
@@ -119,7 +120,16 @@ function Article(props){
   )
 }
 
+//Controller for article
 function ArticleController(props){
+  const [articles, setArticles] = useState([]);
+
+  useEffect(() => {
+    axios.get("http://localhost:8000/api/news-feed")
+      .then((response) => alert("Data"))
+      .catch((err) => alert(err.message));
+  }, []);
+
   return(
     <Article title="Hi, I'm the title" probability=".9" body="I'm a body text weeeeeeeeee" url="https://google.com"/>
   )
