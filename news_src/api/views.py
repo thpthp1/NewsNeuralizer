@@ -8,10 +8,12 @@ import os
 import datetime
 import time
 import logging
+import newsplease
 
 PAGES_LOOKUP = 3
 REQUEST_WAIT_TIME = 0.5
 loggger = logging.getLogger('app_api')
+TIMEOUT = 5 * 60 
 
 def predict(request):
     try:
@@ -53,3 +55,22 @@ def __build_return_feed(news_feed, return_feed):
                 'proba': proba
             }
         )
+
+def link_info(request):
+    try:
+        body_unicode = request.body.decode('utf-8')
+        body = json.loads(body_unicode)
+        if 'link' not in body:
+            return JsonResponse({'error': 'Missing Parameters'})
+    except JSONDecodeError as e:
+        return JsonResponse({'error': 'Parse body failure', 'msg': e.msg})
+    try:
+        article = newsplease.NewsPlease.from_url(url=body['link'], timeout=TIMEOUT)
+        return JsonResponse(
+            {
+                "title": article.title,
+                "body": article.maintext
+            })
+    except Exception:
+        return JsonResponse({'error': 'Timeout'})
+
