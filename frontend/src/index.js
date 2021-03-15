@@ -127,7 +127,7 @@ function ArticleController(props){
 
 ReactDOM.render(
   <React.StrictMode>
-    <ArticleController />
+    <App />
   </React.StrictMode>,
   document.getElementById('root')
 );

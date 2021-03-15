@@ -16,7 +16,7 @@ function Welcome() {
                     buttonStyle='btn--outline'
                     buttonSize='btn--large'>
                     GET STARTED
-                    </Button>
+                </Button>
             </div>
         </div>
     )
