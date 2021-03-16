@@ -1,6 +1,6 @@
 from json.decoder import JSONDecodeError
-from django.shortcuts import render
-from django.http import HttpResponse, JsonResponse
+from .serializers import LinkScrapeSerializer, PredictionInputSerializer
+from django.http import JsonResponse
 import random
 import json
 import requests
@@ -9,25 +9,26 @@ import datetime
 import time
 import logging
 import newsplease
+from rest_framework import status
+from rest_framework.decorators import api_view
+
 
 PAGES_LOOKUP = 3
 REQUEST_WAIT_TIME = 0.5
 loggger = logging.getLogger('app_api')
 TIMEOUT = 5 * 60 
 
+@api_view(['GET', 'POST'])
 def predict(request):
-    try:
-        body_unicode = request.body.decode('utf-8')
-        body = json.loads(body_unicode)
-        if 'title' not in body or 'selftext' not in body:
-            return JsonResponse({'error': 'Missing Parameters'})
-    except JSONDecodeError as e:
-        return JsonResponse({'error': 'Parse body failure', 'msg': e.msg})
+    input_ser = PredictionInputSerializer(data=request.data)
+    if not input_ser.is_valid():
+        return JsonResponse({'error': 'Missing Parameters'}, status=status.HTTP_400_BAD_REQUEST)
     proba = random.random()
     result = {'prediction': proba > 0.5, 'proba': proba}
     loggger.debug(result)
     return JsonResponse(result)
 
+@api_view(['GET', 'POST'])
 def feed(request):
     today = datetime.datetime.now()
     yesterday = today - datetime.timedelta(days=1)
@@ -56,15 +57,13 @@ def __build_return_feed(news_feed, return_feed):
             }
         )
 
+@api_view(['GET', 'POST'])
 def link_info(request):
+    link_ser = LinkScrapeSerializer(data=request.data)
+    if not link_ser.is_valid():
+        return JsonResponse({'error': 'Invalid URL input'}, status=status.HTTP_400_BAD_REQUEST)
     try:
-        body_unicode = request.body.decode('utf-8')
-        body = json.loads(body_unicode)
-        if 'link' not in body:
-            return JsonResponse({'error': 'Missing Parameters'})
-    except JSONDecodeError as e:
-        return JsonResponse({'error': 'Parse body failure', 'msg': e.msg})
-    try:
+        body = link_ser.validated_data
         article = newsplease.NewsPlease.from_url(url=body['link'], timeout=TIMEOUT)
         return JsonResponse(
             {
@@ -72,5 +71,5 @@ def link_info(request):
                 "body": article.maintext
             })
     except Exception:
-        return JsonResponse({'error': 'Timeout'})
+        return JsonResponse({'error': 'Timeout'}, status=status.HTTP_504_GATEWAY_TIMEOUT)
 
