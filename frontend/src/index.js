@@ -117,7 +117,7 @@ function Article(props){
     <div className="article card h-100 shadow bg-white rounded">
       <div className="card-body d-flex flex-column">
         <h2 className="card-title">{props.title}</h2>
-        <p className="probability">{props.prediction} {props.probability}</p>
+        <p className="probability">{props.prediction} {isNaN(props.probability) ? props.probability : parseFloat(props.probability * 100).toFixed(0) + '%'}</p>
         <p className="card-text">{props.body}</p>
         <a href={props.url} target="_blank" rel="noreferrer noopener" className="btn btn-md btn-outline-primary mt-auto">Visit Source</a>
       </div>
@@ -272,6 +272,27 @@ function ArticleController(props){
             <h1>False Articles</h1>
           </div>
         </div>
+        {displayDualFeed()}
+      </div>
+    </div>
+  )
+}
+//      <Article title="cnn.com" prediction="true" probability="0.123456" body="WEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE" url="https://google.com" />
+
+//      <Article title="foxnews.com" prediction="False" probability="0.123456" body="WEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE" url="https://google.com" />
+
+//Below is strictly for testing
+/*
+<div>
+      <div className="container-fluid">
+        <div className="row">
+          <div className="col-md-6">
+            <h1>True Articles</h1>
+          </div>
+          <div className="col-md-6">
+            <h1>False Articles</h1>
+          </div>
+        </div>
         <div key="100" className="row">
           <div className="col-sm-6">
             <Article title="cnn.com" prediction="true" probability="0.123456" body="WEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE" url="https://google.com" />
@@ -283,11 +304,9 @@ function ArticleController(props){
         {displayDualFeed()}
       </div>
     </div>
-  )
-}
-//      <Article title="cnn.com" prediction="true" probability="0.123456" body="WEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE" url="https://google.com" />
 
-//      <Article title="foxnews.com" prediction="False" probability="0.123456" body="WEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE" url="https://google.com" />
+*/
+
 ReactDOM.render(
   <React.StrictMode>
     <ArticleController />
