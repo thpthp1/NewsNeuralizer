@@ -31,7 +31,7 @@ class ArticleController1 extends React.Component {
   renderList = () => {
     if(!this.state.feed){
       //feed is being fetched and should show loading
-      return <Article title="Loading Title" prediction = "Loading Prediction" probability="Loading Probability" body="Loading Body"url="https://google.com" /> ;
+      return <Article title="Loading Title" prediction = "Loading Prediction" probability="Loading Probability" body="Loading Body"url="ASK_NOAH_HOMEPAGE" /> ;
     }
     else{
       //Feed has been fetched
@@ -73,7 +73,19 @@ function ManualForm(props) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    alert(JSON.stringify(form, null, 2));
+    //alert(JSON.stringify(form, null, 2));
+
+    const mForm = {
+      title: form.title,
+      selftext: form.body,
+      optionals: { 
+        categories: form.category
+      }
+    };
+
+    axios.post('http://localhost:8000/api/predict', JSON.stringify(mForm, null, 2))
+      .then(response => alert(JSON.stringify(response.data)));
+
   };
 
   return (
@@ -103,10 +115,11 @@ function ManualForm(props) {
               <input type="text" name="category" onChange={handleChange} className="form-control" placeholder="optional"></input>
             </div>
 
-            <button type="submit" className="btn btn-primary col-md-12 mb-3">Submit Form</button>
+            <button type="submit" className="btn btn-primary btn-lg col-md-12 mb-3">Submit Form</button>
           </form>
         </div>
       </div>
+      
     </div>
   )
 }
@@ -135,7 +148,7 @@ function ArticleController(props){
   const [rendered, setRendered] = useState(false);
 
   useEffect(() => {
-    axios.get("http://localhost:8000/api/news-feed")
+    axios.get("http://localhost:8000/")
       .then(response => response.data)
       .then((data) => {
         setCount(data.count)
@@ -309,7 +322,7 @@ function ArticleController(props){
 
 ReactDOM.render(
   <React.StrictMode>
-    <ArticleController />
+    <ManualForm />
   </React.StrictMode>,
   document.getElementById('root')
 );
