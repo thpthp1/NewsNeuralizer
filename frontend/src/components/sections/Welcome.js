@@ -6,18 +6,17 @@ import './Welcome.css'
 function Welcome() {
     return (
         <div className='welcome-container'>
-            {/* <video src="/videos/video-2.mp4" autoPlay loop muted /> */}
-            <img src="./images/welcome-1.jpg" alt="Newspaper" />
+            <video src="./videos/intro-bg.mp4" autoPlay loop muted />
             <h1>News Neuralizer</h1>
             <p>Fake News Analyzer</p>
-            <div className="welcome-btns">
+            {/* <div className="welcome-btns">
                 <Button
                     className='btns'
                     buttonStyle='btn--outline'
                     buttonSize='btn--large'>
                     GET STARTED
                 </Button>
-            </div>
+            </div> */}
         </div>
     )
 }
