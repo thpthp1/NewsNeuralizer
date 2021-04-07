@@ -322,7 +322,7 @@ function ArticleController(props){
 
 ReactDOM.render(
   <React.StrictMode>
-    <ManualForm />
+    <App />
   </React.StrictMode>,
   document.getElementById('root')
 );
