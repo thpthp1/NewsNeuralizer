@@ -1,49 +1,57 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ReactDOM, { render } from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import axios from "axios";
 
-//default class component
-class MyClass extends React.Component {
+//Old controller prototype
+class ArticleController1 extends React.Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      feed: [],
+      trueFeed: [],
+      falseFeed: [],
+    }
+  }
+
+  componentDidMount(){
+    this.initializeFeed();
+  }
+
+  initializeFeed = () => {
+    /*
+    axios.get("http://localhost:8000/")
+      .then((res) => this.setState({ feed: res.data.feed}))
+      .catch((err) => alert(err.message));
+      */
+  }
+
+  renderList = () => {
+    if(!this.state.feed){
+      //feed is being fetched and should show loading
+      return <Article title="Loading Title" prediction = "Loading Prediction" probability="Loading Probability" body="Loading Body"url="ASK_NOAH_HOMEPAGE" /> ;
+    }
+    else{
+      //Feed has been fetched
+      return (
+        <p>Hi</p>
+      )
+    }
+  }
+
+
   render() {
     return (
-      <h1>Hello World</h1>
+      <div>
+        <h1>Prototype Article List</h1>
+        <ul>
+          {this.renderList()}
+        </ul>
+      </div>
     );
   }
-}
-
-//Test function component
-function FunComponent(props) {
-  const [userInput, setUserInput] = useState('');
-  const [textArea, setTextArea] = useState('');
-  const [sub, setSub] = useState('');
-  const [myArray, setMyArray] = useState([]);
-
-  const handleSubmit = (e) => {
-    setSub(userInput);
-    e.preventDefault();
-  }
-
-  const handleUserInputChange = (e) => {
-    const input = e.target.value;
-    setUserInput(input);
-  }
-
-  const handletextAreaChange = (e) => {
-    const input = e.target.value;
-    setTextArea(input);
-  }
-
-  return (
-    <form onSubmit={handleSubmit}>
-      <input type="text" value={userInput} onChange={handleUserInputChange}></input>
-      <textarea type="text" value={textArea} onChange={handletextAreaChange}></textarea>
-      <p>{userInput}</p>
-      <button type="submit" >Click me!</button>
-      <p style={{ color: 'red' }}>{sub}</p>
-    </form>
-  );
 }
 
 //The form components for manual user input
@@ -65,7 +73,19 @@ function ManualForm(props) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    alert(JSON.stringify(form, null, 2));
+    //alert(JSON.stringify(form, null, 2));
+
+    const mForm = {
+      title: form.title,
+      selftext: form.body,
+      optionals: { 
+        categories: form.category
+      }
+    };
+
+    axios.post('http://localhost:8000/api/predict', JSON.stringify(mForm, null, 2))
+      .then(response => alert(JSON.stringify(response.data)));
+
   };
 
   return (
@@ -95,10 +115,11 @@ function ManualForm(props) {
               <input type="text" name="category" onChange={handleChange} className="form-control" placeholder="optional"></input>
             </div>
 
-            <button type="submit" className="btn btn-primary col-md-12 mb-3">Submit Form</button>
+            <button type="submit" className="btn btn-primary btn-lg col-md-12 mb-3">Submit Form</button>
           </form>
         </div>
       </div>
+      
     </div>
   )
 }
@@ -106,24 +127,198 @@ function ManualForm(props) {
 //One article for the news feed
 function Article(props){
   return(
-    <div className="article">
-        <h1>{props.title}</h1>
-        <p className="probability">{props.probability}</p>
-
-        <p>{props.body}</p>
-
-        <form action={props.url}>
-          <button type="submit">Read More</button>
-        </form>
+    <div className="article card h-100 shadow bg-white rounded">
+      <div className="card-body d-flex flex-column">
+        <h2 className="card-title">{props.title}</h2>
+        <p className="probability">{props.prediction} {isNaN(props.probability) ? props.probability : parseFloat(props.probability * 100).toFixed(0) + '%'}</p>
+        <p className="card-text">{props.body}</p>
+        <a href={props.url} target="_blank" rel="noreferrer noopener" className="btn btn-md btn-outline-primary mt-auto">Visit Source</a>
+      </div>
     </div>
   )
 }
 
+//Controller for article
 function ArticleController(props){
+  const [count, setCount] = useState();
+  const [feed, setFeed] = useState();
+  const [trueFeed, setTrueFeed] = useState([]);
+  const [falseFeed, setFalseFeed] = useState([]);
+
+  const [rendered, setRendered] = useState(false);
+
+  useEffect(() => {
+    axios.get("http://localhost:8000/")
+      .then(response => response.data)
+      .then((data) => {
+        setCount(data.count)
+        setFeed(data.feed); //Only important one
+      })
+      .catch((err) => alert(err.message));
+  }, []);
+
+  const displayFeed = () => {
+    if(feed === undefined){
+      return <Article title="Loading Title" prediction="Loading Prediction" probability="Loading Probability" body="Loading Body"url="https://google.com"/>;
+    }else{
+      initializeTrueFalseFeed();
+      const arrText = Object.values(feed);
+
+      return (
+        <ul>
+          {arrText.map((article, index) => (
+            <div>
+              <p>{index}</p>
+              <Article title={article.url} prediction={JSON.stringify(article.prediction)} probability={article.proba} body={article.text} url={article.url} />
+            </div>
+          ))}
+        </ul>
+      )
+    }
+  };
+
+  const initializeTrueFalseFeed = () => {
+    if(rendered === false){
+      setRendered(true);
+
+      var tFeed = feed.filter((article) => {
+        return article.prediction === true;
+      });
+      console.log("True feed length is " + tFeed.length);
+      setTrueFeed(tFeed);
+
+      var fFeed = feed.filter((article) => {
+        return article.prediction === false;
+      })
+      console.log("False feed length is " + fFeed.length);
+      setFalseFeed(fFeed);
+
+    }else{
+      //true and false feeds have been initialized, so no need to do anything
+    }
+  };
+  
+  
+  const displayDualFeed = () => {
+    //Show loading screen if still fetching data
+    if(feed === undefined){
+      return(
+        <div key="103" className="row">
+          <div className="col-md-6">
+            <Article title="Loading True Feed" prediction="Loading Prediction" probability="and Probability" body="Loading Body"url="https://google.com"/>;          </div>
+          <div key="104" className="col-md-6">
+            <Article title="Loading False Feed" prediction="Loading Prediction" probability="and Probability" body="Loading Body"url="https://google.com"/>;          </div>
+        </div>
+      );
+    }
+
+    //set the true or false feed
+    initializeTrueFalseFeed();
+    
+    var trueAmount = trueFeed.length;
+    var falseAmount = falseFeed.length;
+
+    var smallerAmount = trueAmount < falseAmount ? trueAmount : falseAmount;
+    var largerAmount = trueAmount > falseAmount ? trueAmount : falseAmount;
+    
+    var rows = [];
+
+    //add the rows with both articles
+    var i;
+    for(i = 0; i < smallerAmount; i++){
+      rows.push(
+        <div key={i} className="row">
+          <div className="col-sm-6">
+            <Article title={trueFeed[i].url} prediction={JSON.stringify(trueFeed[i].prediction)} probability={trueFeed[i].proba} body={trueFeed[i].text} url={trueFeed[i].url} />
+          </div>
+          <div className="col-sm-6">
+            <Article title={falseFeed[i].url} prediction={JSON.stringify(falseFeed[i].prediction)} probability={falseFeed[i].proba} body={falseFeed[i].text} url={falseFeed[i].url} />
+          </div>
+        </div>
+      );
+    }
+    
+    //add the remaining only true or false articles
+    while(i < largerAmount){
+      //only true left
+      if(trueAmount > falseAmount){
+        rows.push(
+          <div key={i} className="row">
+            <div className="col-sm-6">
+              <Article key={i} title={trueFeed[i].url} prediction={JSON.stringify(trueFeed[i].prediction)} probability={trueFeed[i].proba} body={trueFeed[i].text} url={trueFeed[i].url} />
+            </div>
+            <div className="col-sm-6">
+            </div>
+          </div>
+        );
+      }else{
+        //only false left
+        rows.push(
+          <div key={i} className="row">
+            <div className="col-sm-6">
+            </div>
+            <div className="col-sm-6">
+              <Article title={falseFeed[i].url} prediction={JSON.stringify(falseFeed[i].prediction)} probability={falseFeed[i].proba} body={falseFeed[i].text} url={falseFeed[i].url} />
+            </div>
+          </div>
+        );
+      }
+      i++;
+    }
+
+    return (
+      <div>
+        {rows}
+      </div>
+    );
+
+  }
+  
   return(
-    <Article title="Hi, I'm the title" probability=".9" body="I'm a body text weeeeeeeeee" url="https://google.com"/>
+    <div>
+      <div className="container-fluid">
+        <div className="row">
+          <div className="col-md-6">
+            <h1>True Articles</h1>
+          </div>
+          <div className="col-md-6">
+            <h1>False Articles</h1>
+          </div>
+        </div>
+        {displayDualFeed()}
+      </div>
+    </div>
   )
 }
+//      <Article title="cnn.com" prediction="true" probability="0.123456" body="WEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE" url="https://google.com" />
+
+//      <Article title="foxnews.com" prediction="False" probability="0.123456" body="WEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE" url="https://google.com" />
+
+//Below is strictly for testing
+/*
+<div>
+      <div className="container-fluid">
+        <div className="row">
+          <div className="col-md-6">
+            <h1>True Articles</h1>
+          </div>
+          <div className="col-md-6">
+            <h1>False Articles</h1>
+          </div>
+        </div>
+        <div key="100" className="row">
+          <div className="col-sm-6">
+            <Article title="cnn.com" prediction="true" probability="0.123456" body="WEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE" url="https://google.com" />
+          </div>
+          <div key="101" className="col-sm-6">
+            <Article title="foxnews.com" prediction="False" probability="0.123456" body="WEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE" url="https://google.com" />
+          </div>
+        </div>
+        {displayDualFeed()}
+      </div>
+    </div>
+
+*/
 
 ReactDOM.render(
   <React.StrictMode>
