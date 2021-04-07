@@ -9,12 +9,6 @@ function App() {
         <Welcome />
         <ArticleForm />
        </>
-    /* // <Router>
-       <Switch>
-         <Route path='/' exact component={Welcome} />
-         <Route path='/' exact component={ArticleInput} />
-       </Switch>
-     </Router> */
   );
 }
 
