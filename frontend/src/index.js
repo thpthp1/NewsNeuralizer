@@ -85,37 +85,36 @@ function ManualForm(props) {
 
     axios.post('http://localhost:8000/api/predict', JSON.stringify(mForm, null, 2))
       .then(response => alert(JSON.stringify(response.data)));
-
   };
 
   return (
-    <div className="p-3 h-100 rounded" style={{ backgroundColor: 'white' }}>
+    <div className="p-3 h-100 rounded" style={{ backgroundColor: '#111' }}>
       <div className="row h-100 justify-content-center align-items-center">
         <div className="col-10 col-md-8 col-lg-6">
-          <h1>Manual Input Form</h1>
+          <h1  style={{ color: 'white' }}>Manual Input Form</h1>
 
           <form onSubmit={handleSubmit}>
             <div className="form-group">
-              <label for="url" className="mt-3">URL:</label>
+              <label for="url" className="mt-3" style={{ color: 'white' }}>URL:</label>
               <input type="text" name="url" onChange={handleChange} className="form-control" placeholder="example.com"></input>
             </div>
 
             <div className="form-group">
-              <label for="title" className="">Title:</label>
+              <label for="title" className="" style={{ color: 'white' }}>Title:</label>
               <input type="text" name="title" onChange={handleChange} className="form-control" placeholder="Title"></input>
             </div>
 
             <div className="form-group">
-              <label for="body" className="">Article Body:</label>
-              <textarea type="text" name="body" onChange={handleChange} className="form-control" placeholder="Insert Article Body Paragraphs" rows="5"></textarea>
+              <label for="body" className="" style={{ color: 'white' }}>Article Body:</label>
+              <textarea type="text" name="body" onChange={handleChange} className="form-control" placeholder="Article Body Paragraphs" rows="5"></textarea>
             </div>
 
             <div className="form-group">
-              <label for="category" className="">Category:</label>
-              <input type="text" name="category" onChange={handleChange} className="form-control" placeholder="optional"></input>
+              <label for="category" className="" style={{ color: 'white' }}>Category: (Optional)</label>
+              <input type="text" name="category" onChange={handleChange} className="form-control" placeholder="politics"></input>
             </div>
 
-            <button type="submit" className="btn btn-primary btn-lg col-md-12 mb-3">Submit Form</button>
+            <button type="submit" className="btn btn-secondary btn-lg col-md-12 mb-3">Neuralize</button>
           </form>
         </div>
       </div>
@@ -290,6 +289,8 @@ function ArticleController(props){
     </div>
   )
 }
+
+export default ManualForm
 //      <Article title="cnn.com" prediction="true" probability="0.123456" body="WEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE" url="https://google.com" />
 
 //      <Article title="foxnews.com" prediction="False" probability="0.123456" body="WEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE" url="https://google.com" />
@@ -322,7 +323,7 @@ function ArticleController(props){
 
 ReactDOM.render(
   <React.StrictMode>
-    <ManualForm />
+    <App />
   </React.StrictMode>,
   document.getElementById('root')
 );

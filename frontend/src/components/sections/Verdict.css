@@ -1,0 +1,14 @@
+div {
+    font-family: monospace;
+}
+
+.verdict-container {
+    background-color: #c9c9c9;
+    padding: 4rem 0 4rem 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+}

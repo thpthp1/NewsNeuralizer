@@ -1,14 +1,15 @@
 import './App.css';
-import Welcome from './components/pages/Welcome';
+import Welcome from './components/sections/Welcome';
+import ArticleForm from './components/sections/ArticleForm';
+import ManualForm from './index';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
 function App() {
   return (
-    <Router>
-      <Switch>
-        <Route path='/' exact component={Welcome} />
-      </Switch>
-    </Router>
+       <>
+        <Welcome />
+        <ManualForm />
+       </>
   );
 }
 
