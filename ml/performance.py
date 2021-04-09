@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 from copy import deepcopy
-from news_classifier import *
+from model import *
 
 CONFIDENCE_LBL = 'CONFIDENCE'
 NEWS_COL = 'combined'
@@ -19,7 +19,7 @@ def train_full(df):
     return classifier, acc, prec, rec, auc_val
 
 
-def train_5fold(df, print_enabled=True):
+def train_5fold(df, clf=LogisticRegression(), print_enabled=False):
     folds_list = create_folds(df)
     accuracy_list = []
     precision_list = []
@@ -40,7 +40,7 @@ def train_5fold(df, print_enabled=True):
         if print_enabled:
             print('Predicting fold # ', i + 1)
 
-        _, acc, prec, rec = train_test(train, test, true_classes, conf_levels)
+        _, acc, prec, rec = train_test(train, test, true_classes, conf_levels, clf=clf)
         accuracy_list.append(acc)
         precision_list.append(prec)
         recall_list.append(rec)
@@ -57,10 +57,10 @@ def train_5fold(df, print_enabled=True):
     return acc_mean, acc_std, prec_mean, prec_std, recall_mean, recall_std, auc_val
 
 
-def train_test(training_df, testing_df, true_classes, conf_levels):
+def train_test(training_df, testing_df, true_classes, conf_levels, clf=LogisticRegression()):
 
     # Train classifier
-    classifier = NewsClassifier()
+    classifier = NewsClassifier(clf=clf) #NeuralNewsClassifier()
     classifier.train(training_df[NEWS_COL], training_df[LABEL_COL])
 
     # Test classifier
@@ -75,7 +75,6 @@ def train_test(training_df, testing_df, true_classes, conf_levels):
     for i in range(test_examples):
         true_cl = testing_df.iloc[i][LABEL_COL]
         predicted_cl = labels[i]
-        #predicted_cl, confidence = classifier.predict(testing_df.iloc[i])
 
         true_classes.append(true_cl)
         conf_levels.append(probs[i])
