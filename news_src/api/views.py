@@ -19,7 +19,7 @@ from newsplease import NewsArticle
 
 PAGES_LOOKUP = 3
 REQUEST_WAIT_TIME = 0.5
-loggger = logging.getLogger('app_api')
+loggger = logging.getLogger('django')
 TIMEOUT = 5 * 60 
 
 @api_view(['GET', 'POST'])
@@ -29,7 +29,7 @@ def predict(request):
         return JsonResponse({'error': 'Missing Parameters'}, status=status.HTTP_400_BAD_REQUEST)
     proba = random.random()
     result = {'prediction': proba > 0.5, 'proba': proba}
-    loggger.debug(result)
+    loggger.info(f"Prediction: {result}")
     return JsonResponse(result)
 
 @api_view(['GET', 'POST'])

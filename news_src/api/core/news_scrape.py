@@ -15,7 +15,7 @@ loggger = logging.getLogger('app_api')
 
 PROC_COUNT = 3
 
-with open(os.path.join(os.path.dirname(__file__), "test_feed.json"), "rb") as f:
+with open(os.path.join(os.path.dirname(__file__), "feed-config.json"), "rb") as f:
     FEED_JSON = json.load(f)
 
 def _article(link: str):
