@@ -1,0 +1,31 @@
+{
+    "sources": [
+        {
+            "id": "bbc",
+            "url": "http://feeds.bbci.co.uk/news/politics/rss.xml",
+            "find": {
+                "element": "link",
+                "class": "",
+                "href": "https:\/\/www.bbc.co.uk\/news\/[^\"]+"
+            }
+        },
+        {
+            "id": "cnn",
+            "url": "http://rss.cnn.com/rss/cnn_topstories.rss",
+            "find": {
+                "element": "guid",
+                "class": "",
+                "href": "https://www.cnn.com/*"
+            }
+        },
+        {
+            "id": "fox",
+            "url": "http://feeds.foxnews.com/foxnews/politics",
+            "find": {
+                "element": "guid",
+                "class": "",
+                "href": "https://www.foxnews.com/*"
+            }
+        }
+    ]
+}
