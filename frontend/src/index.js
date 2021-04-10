@@ -6,55 +6,6 @@ import reportWebVitals from './reportWebVitals';
 import axios from "axios";
 import ArticleForm from './components/sections/ArticleForm';
 
-//Old controller prototype
-class ArticleController1 extends React.Component {
-  constructor(props){
-    super(props);
-    this.state = {
-      feed: [],
-      trueFeed: [],
-      falseFeed: [],
-    }
-  }
-
-  componentDidMount(){
-    this.initializeFeed();
-  }
-
-  initializeFeed = () => {
-    /*
-    axios.get("http://localhost:8000/")
-      .then((res) => this.setState({ feed: res.data.feed}))
-      .catch((err) => alert(err.message));
-      */
-  }
-
-  renderList = () => {
-    if(!this.state.feed){
-      //feed is being fetched and should show loading
-      return <Article title="Loading Title" prediction = "Loading Prediction" probability="Loading Probability" body="Loading Body"url="ASK_NOAH_HOMEPAGE" /> ;
-    }
-    else{
-      //Feed has been fetched
-      return (
-        <p>Hi</p>
-      )
-    }
-  }
-
-
-  render() {
-    return (
-      <div>
-        <h1>Prototype Article List</h1>
-        <ul>
-          {this.renderList()}
-        </ul>
-      </div>
-    );
-  }
-}
-
 //The form components for manual user input
 function ManualForm(props) {
   const [header, setHeader] = useState(props.header);
@@ -423,7 +374,6 @@ function ArticleController(props){
   )
 }
 
-export default ManualForm
 
 function UrlForm(props){
   const [url, setUrl] = useState('');
@@ -509,151 +459,7 @@ function UrlForm(props){
 
 }
 
-
-
-function ArticleModal(props){
-  return(
-    <div>
-    <div>
-      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
-        Launch demo modal
-      </button>
-    </div>
-    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLongTitle">{props.title} Title {props.percentage}% {props.result}</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            {props.body} Body here
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          </div>
-        </div>
-      </div>
-    </div>
-    </div>
-  )
-}
-
-function FormModal(props){
-  const [form, setForm] = useState({
-    url: props.url,
-    title: props.title,
-    body: props.body,
-  });
-
-
-  const handleChange = ({ target }) => {
-    const { name, value } = target;
-    setForm((prev) => ({
-      ...prev,
-      [name]: value
-    }));
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    //alert(JSON.stringify(form, null, 2));
-
-    const mForm = {
-      title: form.title,
-      selftext: form.body,
-      optionals: { 
-        categories: form.category
-      }
-    };
-
-    axios.post('http://localhost:8000/api/predict', JSON.stringify(mForm, null, 2))
-      .then(response => alert(JSON.stringify(response.data)));
-  };
-
-  return(
-    <div>
-      <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel">Here's What We Gathered</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <form>
-              <div className="form-group">
-                <label for="title" className="ml-2" style={{ color: 'black' }}>Title:</label>
-                <input type="text" name="title" onChange={handleChange} className="form-control" placeholder="Title" value={form.title}></input>
-              </div>
-
-              <div className="form-group">
-                <label for="body" className="ml-2" style={{ color: 'black' }}>Article Body:</label>
-                <textarea type="text" name="body" onChange={handleChange} className="form-control" placeholder="Article Body Paragraphs" value={form.body} rows="5"></textarea>
-              </div>
-
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" onClick={handleSubmit} data-dismiss="modal" class="btn btn-primary" >Looks Good</button>
-              </div>
-
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
-  )
-}
-
-FormModal.defaultProps = {
-  url: '',
-  title: '',
-  body: ''
-}
-
-//      <Article title="cnn.com" prediction="true" probability="0.123456" body="WEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE" url="https://google.com" />
-
-//      <Article title="foxnews.com" prediction="False" probability="0.123456" body="WEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE" url="https://google.com" />
-
-//Below is strictly for testing
-/*
-<div>
-      <div className="container-fluid">
-        <div className="row">
-          <div className="col-md-6">
-            <h1>True Articles</h1>
-          </div>
-          <div className="col-md-6">
-            <h1>False Articles</h1>
-          </div>
-        </div>
-        <div key="100" className="row">
-          <div className="col-sm-6">
-            <Article title="cnn.com" prediction="true" probability="0.123456" body="WEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE" url="https://google.com" />
-          </div>
-          <div key="101" className="col-sm-6">
-            <Article title="foxnews.com" prediction="False" probability="0.123456" body="WEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE" url="https://google.com" />
-          </div>
-        </div>
-        {displayDualFeed()}
-      </div>
-    </div>
-
-*/
-
-function ModalTest(props){
-  return(
-    <div>
-      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-        Launch demo modal
-      </button>
-      <UrlForm />
-    </div>
-  )
-}
+export default UrlForm
 
 ReactDOM.render(
   <React.StrictMode>
