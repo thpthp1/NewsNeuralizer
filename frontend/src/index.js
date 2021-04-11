@@ -4,64 +4,20 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import axios from "axios";
-
-//Old controller prototype
-class ArticleController1 extends React.Component {
-  constructor(props){
-    super(props);
-    this.state = {
-      feed: [],
-      trueFeed: [],
-      falseFeed: [],
-    }
-  }
-
-  componentDidMount(){
-    this.initializeFeed();
-  }
-
-  initializeFeed = () => {
-    /*
-    axios.get("http://localhost:8000/")
-      .then((res) => this.setState({ feed: res.data.feed}))
-      .catch((err) => alert(err.message));
-      */
-  }
-
-  renderList = () => {
-    if(!this.state.feed){
-      //feed is being fetched and should show loading
-      return <Article title="Loading Title" prediction = "Loading Prediction" probability="Loading Probability" body="Loading Body"url="ASK_NOAH_HOMEPAGE" /> ;
-    }
-    else{
-      //Feed has been fetched
-      return (
-        <p>Hi</p>
-      )
-    }
-  }
-
-
-  render() {
-    return (
-      <div>
-        <h1>Prototype Article List</h1>
-        <ul>
-          {this.renderList()}
-        </ul>
-      </div>
-    );
-  }
-}
+import ArticleForm from './components/sections/ArticleForm';
 
 //The form components for manual user input
 function ManualForm(props) {
+  const [header, setHeader] = useState(props.header);
+  const [processed, setProcessed] = useState(false);
   const [form, setForm] = useState({
-    url: '',
-    title: '',
-    body: '',
+    url: props.url,
+    title: props.title,
+    body: props.body,
     category: ''
   });
+  const [probability, setProbability] = useState('');
+  const [prediction, setPrediction] = useState('');
 
   const handleChange = ({ target }) => {
     const { name, value } = target;
@@ -83,39 +39,48 @@ function ManualForm(props) {
       }
     };
 
-    axios.post('http://localhost:8000/api/predict', JSON.stringify(mForm, null, 2))
-      .then(response => alert(JSON.stringify(response.data)));
+    axios.post('http://localhost:8000/api/predict', {title: form.title, selftext: form.title})
+      .then(response => {
+        alert(JSON.stringify(response.data));
+        setPrediction(response.data.prediction);
+        setProbability(response.data.proba);
+        setProcessed(true);
+      });
   };
+
+  const displayResult = () => {
+    if(processed){
+      return(
+        <Verdict title={form.title} body={form.body} prediction={prediction} probability={probability}/>
+      )
+    }else{
+      return(
+        <h1></h1>
+      )
+    }
+  }
+
 
   return (
     <div className="p-3 h-100 rounded" style={{ backgroundColor: '#111' }}>
       <div className="row h-100 justify-content-center align-items-center">
         <div className="col-10 col-md-8 col-lg-6">
-          <h1  style={{ color: 'white' }}>Manual Input Form</h1>
+          <h1  style={{ color: 'white' }}>{header}</h1>
 
           <form onSubmit={handleSubmit}>
             <div className="form-group">
-              <label for="url" className="mt-3" style={{ color: 'white' }}>URL:</label>
-              <input type="text" name="url" onChange={handleChange} className="form-control" placeholder="example.com"></input>
-            </div>
-
-            <div className="form-group">
               <label for="title" className="" style={{ color: 'white' }}>Title:</label>
-              <input type="text" name="title" onChange={handleChange} className="form-control" placeholder="Title"></input>
+              <input type="text" name="title" onChange={handleChange} className="form-control" placeholder="Title" value={form.title}></input>
             </div>
 
             <div className="form-group">
               <label for="body" className="" style={{ color: 'white' }}>Article Body:</label>
-              <textarea type="text" name="body" onChange={handleChange} className="form-control" placeholder="Article Body Paragraphs" rows="5"></textarea>
-            </div>
-
-            <div className="form-group">
-              <label for="category" className="" style={{ color: 'white' }}>Category: (Optional)</label>
-              <input type="text" name="category" onChange={handleChange} className="form-control" placeholder="politics"></input>
+              <textarea type="text" name="body" onChange={handleChange} className="form-control" placeholder="Article Body Paragraphs" rows="5" value={form.body}></textarea>
             </div>
 
             <button type="submit" className="btn btn-secondary btn-lg col-md-12 mb-3">Neuralize</button>
           </form>
+          {displayResult()}
         </div>
       </div>
       
@@ -123,6 +88,101 @@ function ManualForm(props) {
   )
 }
 
+/*
+ManualForm.defaultProps = {
+  url: '',
+  title: '',
+  body: ''
+}
+*/
+
+//The form components for scraped user input
+function InputtedForm(props) {
+  const [header, setHeader] = useState(props.header);
+  const [processed, setProcessed] = useState(false);
+  const [form, setForm] = useState({
+    url: props.url,
+    title: props.title,
+    body: props.body,
+    category: ''
+  });
+  const [probability, setProbability] = useState('');
+  const [prediction, setPrediction] = useState();
+
+  const handleChange = ({ target }) => {
+    const { name, value } = target;
+    setForm((prev) => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    //alert(JSON.stringify(form, null, 2));
+
+    const mForm = {
+      title: form.title,
+      selftext: form.body,
+      optionals: { 
+        categories: form.category
+      }
+    };
+
+    axios.post('http://localhost:8000/api/predict', {title: form.title, selftext: form.title})
+      .then(response => {
+        //alert(JSON.stringify(response.data));
+        setPrediction(response.data.prediction);
+        //alert(response.data.prediction);
+        if(response.data.prediction === true){
+          setPrediction('True');
+        }else{
+          setPrediction('False');
+        }
+        setProbability(response.data.proba);
+        setProcessed(true);
+      });
+  };
+
+  const displayResult = () => {
+    if(processed){
+      return(
+        <Verdict title={form.title} body={form.body} prediction={prediction} probability={probability}/>
+      )
+    }else{
+      return(
+        <h1></h1>
+      )
+    }
+  }
+
+
+  return (
+    <div className="p-3 h-100 rounded" style={{ backgroundColor: '#111' }}>
+      <div className="row h-100 justify-content-center align-items-center">
+        <div className="col-10 col-md-8 col-lg-6">
+          <h1  style={{ color: 'white' }}>{header}</h1>
+
+          <form onSubmit={handleSubmit}>
+            <div className="form-group">
+              <label for="title" className="" style={{ color: 'white' }}>Title:</label>
+              <input type="text" name="title" onChange={handleChange} className="form-control" placeholder="Title" value={form.title}></input>
+            </div>
+
+            <div className="form-group">
+              <label for="body" className="" style={{ color: 'white' }}>Article Body:</label>
+              <textarea type="text" name="body" onChange={handleChange} className="form-control" placeholder="Article Body Paragraphs" rows="5" value={form.body}></textarea>
+            </div>
+
+            <button type="submit" className="btn btn-secondary btn-lg col-md-12 mb-3">Neuralize</button>
+          </form>
+          {displayResult()}
+        </div>
+      </div>
+      
+    </div>
+  )
+}
 //One article for the news feed
 function Article(props){
   return(
@@ -132,6 +192,19 @@ function Article(props){
         <p className="probability">{props.prediction} {isNaN(props.probability) ? props.probability : parseFloat(props.probability * 100).toFixed(0) + '%'}</p>
         <p className="card-text">{props.body}</p>
         <a href={props.url} target="_blank" rel="noreferrer noopener" className="btn btn-md btn-outline-primary mt-auto">Visit Source</a>
+      </div>
+    </div>
+  )
+}
+
+//One article for the news feed
+function Verdict(props){
+  return(
+    <div className="article card h-100 shadow bg-white rounded">
+      <div className="card-body d-flex flex-column">
+        <h2 className="card-title">{props.title}</h2>
+        <p className="probability">{props.prediction} {isNaN(props.probability) ? props.probability : parseFloat(props.probability * 100).toFixed(0) + '%'}</p>
+        <p className="card-text">{props.body}</p>
       </div>
     </div>
   )
@@ -147,7 +220,8 @@ function ArticleController(props){
   const [rendered, setRendered] = useState(false);
 
   useEffect(() => {
-    axios.get("http://localhost:8000/")
+    //http://localhost:8000/api/news-feed
+    axios.get("http://localhost:8000/api/news-feed")
       .then(response => response.data)
       .then((data) => {
         setCount(data.count)
@@ -290,36 +364,95 @@ function ArticleController(props){
   )
 }
 
-export default ManualForm
-//      <Article title="cnn.com" prediction="true" probability="0.123456" body="WEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE" url="https://google.com" />
 
-//      <Article title="foxnews.com" prediction="False" probability="0.123456" body="WEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE" url="https://google.com" />
+function UrlForm(props){
+  const [url, setUrl] = useState('');
+  const [title, setTitle] = useState('');
+  const [body, setBody] = useState('');
+  const [gathered, setGathered] = useState(false);
 
-//Below is strictly for testing
-/*
-<div>
-      <div className="container-fluid">
-        <div className="row">
-          <div className="col-md-6">
-            <h1>True Articles</h1>
-          </div>
-          <div className="col-md-6">
-            <h1>False Articles</h1>
+  const handleChange = ({ target }) => {
+    const { name, value } = target;
+    setUrl((prev) => ({
+      //...prev,
+      [name]: value
+    }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    //alert(JSON.stringify(form, null, 2));
+
+    //https://cnn.com
+    const mForm = {
+      link: url.url
+    };
+
+    //axios.post("http://localhost:8000/api/link-info", {link:"https://www.cnn.com/2021/04/09/politics/marines-coronavirus-vaccines/index.html"}).then((response) => {console.log(response.data)});
+    //axios.post("http://localhost:8000/api/link-info", {link:url.url}).then((response) => {console.log(response.data)});
+    //alert('Json being sent ' + JSON.stringify(mForm));
+    axios.post('http://localhost:8000/api/link-info', {link:url.url})
+      .then(response => {
+        if(response.data.title != null){
+          setTitle(response.data.title);
+          console.log(response.data.title)
+        }else{
+
+        }
+
+        if(response.data.body != null){
+          setBody(response.data.body);
+          console.log('Body is ' + body)
+        }else{
+
+        }
+
+        setGathered(true);
+      })
+  };
+  
+
+  const displayManualForm = () => {
+    if(gathered){
+      return(
+        <div>
+          <InputtedForm header="Here's what we gathered" title={title} body={body}/>
+        </div>
+      )
+    }else{
+      return(
+        <div>
+          <ManualForm header="Manual Input Form" />
+        </div>       
+      )
+    }
+  }
+
+
+  return(
+    <div>
+      <div className="p-3 h-100 rounded" style={{ backgroundColor: '#111' }}>
+        <div className="row h-100 justify-content-center align-items-center">
+          <div className="col-10 col-md-8 col-lg-6">
+            <h1  style={{ color: 'white' }}>Let us do the work.</h1>
+
+            <form onSubmit={handleSubmit}>
+              <div className="form-group">
+                <label for="url" className="mt-3" style={{ color: 'white' }}>URL:</label>
+                <input type="text" name="url" onChange={handleChange} className="form-control" placeholder="example.com"></input>
+              </div>
+              <button type="submit" data-toggle="modal" data-target="#exampleModal" className="btn btn-secondary btn-lg col-md-12 mb-3">Autofill</button>
+            </form>
           </div>
         </div>
-        <div key="100" className="row">
-          <div className="col-sm-6">
-            <Article title="cnn.com" prediction="true" probability="0.123456" body="WEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE" url="https://google.com" />
-          </div>
-          <div key="101" className="col-sm-6">
-            <Article title="foxnews.com" prediction="False" probability="0.123456" body="WEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE" url="https://google.com" />
-          </div>
-        </div>
-        {displayDualFeed()}
       </div>
+      {displayManualForm()}
     </div>
+  )
 
-*/
+}
+
+export default UrlForm
 
 ReactDOM.render(
   <React.StrictMode>
