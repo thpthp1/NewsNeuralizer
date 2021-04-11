@@ -39,7 +39,7 @@ function ManualForm(props) {
       }
     };
 
-    axios.post('http://localhost:8000/api/predict', JSON.stringify(mForm, null, 2))
+    axios.post('http://localhost:8000/api/predict', {title: form.title, selftext: form.title})
       .then(response => {
         alert(JSON.stringify(response.data));
         setPrediction(response.data.prediction);
@@ -76,11 +76,6 @@ function ManualForm(props) {
             <div className="form-group">
               <label for="body" className="" style={{ color: 'white' }}>Article Body:</label>
               <textarea type="text" name="body" onChange={handleChange} className="form-control" placeholder="Article Body Paragraphs" rows="5" value={form.body}></textarea>
-            </div>
-
-            <div className="form-group">
-              <label for="category" className="" style={{ color: 'white' }}>Category: (Optional)</label>
-              <input type="text" name="category" onChange={handleChange} className="form-control" placeholder="politics"></input>
             </div>
 
             <button type="submit" className="btn btn-secondary btn-lg col-md-12 mb-3">Neuralize</button>
@@ -134,11 +129,11 @@ function InputtedForm(props) {
       }
     };
 
-    axios.post('http://localhost:8000/api/predict', JSON.stringify(mForm, null, 2))
+    axios.post('http://localhost:8000/api/predict', {title: form.title, selftext: form.title})
       .then(response => {
-        alert(JSON.stringify(response.data));
+        //alert(JSON.stringify(response.data));
         setPrediction(response.data.prediction);
-        alert(response.data.prediction);
+        //alert(response.data.prediction);
         if(response.data.prediction === true){
           setPrediction('True');
         }else{
@@ -177,11 +172,6 @@ function InputtedForm(props) {
             <div className="form-group">
               <label for="body" className="" style={{ color: 'white' }}>Article Body:</label>
               <textarea type="text" name="body" onChange={handleChange} className="form-control" placeholder="Article Body Paragraphs" rows="5" value={form.body}></textarea>
-            </div>
-
-            <div className="form-group">
-              <label for="category" className="" style={{ color: 'white' }}>Category: (Optional)</label>
-              <input type="text" name="category" onChange={handleChange} className="form-control" placeholder="politics"></input>
             </div>
 
             <button type="submit" className="btn btn-secondary btn-lg col-md-12 mb-3">Neuralize</button>
@@ -397,10 +387,12 @@ function UrlForm(props){
     const mForm = {
       link: url.url
     };
-    alert(JSON.stringify(mForm));
-    axios.post('http://localhost:8000/api/link-info', JSON.stringify(mForm, null, 2))
+
+    //axios.post("http://localhost:8000/api/link-info", {link:"https://www.cnn.com/2021/04/09/politics/marines-coronavirus-vaccines/index.html"}).then((response) => {console.log(response.data)});
+    //axios.post("http://localhost:8000/api/link-info", {link:url.url}).then((response) => {console.log(response.data)});
+    //alert('Json being sent ' + JSON.stringify(mForm));
+    axios.post('http://localhost:8000/api/link-info', {link:url.url})
       .then(response => {
-        alert(JSON.stringify(response.data))
         if(response.data.title != null){
           setTitle(response.data.title);
           console.log(response.data.title)
@@ -416,8 +408,9 @@ function UrlForm(props){
         }
 
         setGathered(true);
-      });
+      })
   };
+  
 
   const displayManualForm = () => {
     if(gathered){
@@ -463,7 +456,7 @@ export default UrlForm
 
 ReactDOM.render(
   <React.StrictMode>
-    <UrlForm/>
+    <App />
   </React.StrictMode>,
   document.getElementById('root')
 );
