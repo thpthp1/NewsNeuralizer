@@ -122,7 +122,6 @@ if __name__ == '__main__':
     save_model(classifier)
     '''
 
-
     classifier = load_model()
     # Predict
     # input should be an array. Each element is a single news (title + body)
