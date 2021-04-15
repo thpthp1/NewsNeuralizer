@@ -1,0 +1,45 @@
+Preprocessing data...
+Predicting fold #  1
+Predicting fold #  2
+Predicting fold #  3
+Predicting fold #  4
+Predicting fold #  5
+Logistic Regression
+Accuracy:  0.973 +- 0.001
+Precision:  0.976 +- 0.002
+Recall:  0.968 +- 0.002
+ROC:  0.962
+---------------
+Predicting fold #  1
+Predicting fold #  2
+Predicting fold #  3
+Predicting fold #  4
+Predicting fold #  5
+Naive Bayes
+Accuracy:  0.92 +- 0.004
+Precision:  0.916 +- 0.004
+Recall:  0.918 +- 0.004
+ROC:  0.886
+---------------
+Predicting fold #  1
+Predicting fold #  2
+Predicting fold #  3
+Predicting fold #  4
+Predicting fold #  5
+Decision Tree
+Accuracy:  0.959 +- 0.002
+Precision:  0.959 +- 0.004
+Recall:  0.955 +- 0.003
+ROC:  0.595
+---------------
+Predicting fold #  1
+Predicting fold #  2
+Predicting fold #  3
+Predicting fold #  4
+Predicting fold #  5
+Adaboost
+Accuracy:  0.966 +- 0.002
+Precision:  0.971 +- 0.003
+Recall:  0.958 +- 0.002
+ROC:  0.951
+---------------
