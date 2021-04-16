@@ -33,7 +33,7 @@ def news_feed() -> List[NewsArticle.NewsArticle]:
         link_pattern = re.compile(source["find"]["href"])
         links += [link.text for link in rss.find_all(source["find"]["element"]) 
                         if link_pattern.match(link.text)]
-    #print(links)
     with Pool(processes=PROC_COUNT) as pool:
         articles = pool.map(_article, links)
+        articles = [article for article in articles if article.maintext is not None]
     return articles
