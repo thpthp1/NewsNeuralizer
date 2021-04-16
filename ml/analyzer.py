@@ -3,7 +3,12 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import AdaBoostClassifier
-from sklearn.neural_network import MLPClassifier
+
+
+def dataset_analysis(df):
+    print('Total examples:', df.shape[0])
+    print('Total fake:', df[df[LABEL_COL] == 0].shape[0])
+    print('Total real:', df[df[LABEL_COL] == 1].shape[0])
 
 
 def train(name, df, clf):
@@ -18,15 +23,18 @@ def train(name, df, clf):
     print('---------------')
 
 
-#df = load_data()
-#print('Preprocessing data...')
-#preprocess_text(df)
-#pickle.dump(df, open('preproc_data', 'wb'))
+df1 = load_dataset1()
+df2 = load_dataset2()
+df = pd.concat([df1, df2], ignore_index=True)
 
-df = pickle.load(open('preproc_data', 'rb'))
 
-train('Logistic Regression', LogisticRegression())
-train('Naive Bayes', MultinomialNB())
-train('Decision Tree', DecisionTreeClassifier()) # With gini
-train('Adaboost', AdaBoostClassifier())
-#train('Neural Network', df, MLPClassifier())
+# print('Preprocessing data...')
+# preprocess_text(df)
+# pickle.dump(df, open('preproc_data_all', 'wb'))
+df = pickle.load(open('preproc_data_all', 'rb'))
+
+train('Logistic Regression', df, LogisticRegression())
+train('Naive Bayes', df, MultinomialNB())
+train('Decision Tree', df, DecisionTreeClassifier())  # With gini
+train('Adaboost', df, AdaBoostClassifier())
+

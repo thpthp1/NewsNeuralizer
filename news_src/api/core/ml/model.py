@@ -46,7 +46,7 @@ class NewsClassifier:
 
     def __vectorize(self, examples):
         # Transform words into numbers (counts for each word)
-        # Rows are rows, cols are indices of unique words a[i][j]: frequency
+        # Rows are news, cols are indices of unique words a[i][j]: frequency
         freq_matrix = self.cv.fit_transform(examples)
 
         # Give larger values (weigh up) for less frequent words

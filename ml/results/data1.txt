@@ -1,0 +1,48 @@
+[nltk_data] Downloading package punkt to
+[nltk_data]     /Users/andresbeltran/nltk_data...
+[nltk_data]   Package punkt is already up-to-date!
+Preprocessing data...
+Predicting fold #  1
+Predicting fold #  2
+Predicting fold #  3
+Predicting fold #  4
+Predicting fold #  5
+Logistic Regression
+Accuracy:  0.99 +- 0.001
+Precision:  0.989 +- 0.002
+Recall:  0.991 +- 0.002
+ROC:  0.985
+---------------
+Predicting fold #  1
+Predicting fold #  2
+Predicting fold #  3
+Predicting fold #  4
+Predicting fold #  5
+Naive Bayes
+Accuracy:  0.952 +- 0.002
+Precision:  0.949 +- 0.003
+Recall:  0.95 +- 0.003
+ROC:  0.903
+---------------
+Predicting fold #  1
+Predicting fold #  2
+Predicting fold #  3
+Predicting fold #  4
+Predicting fold #  5
+Decision Tree
+Accuracy:  0.996 +- 0.001
+Precision:  0.996 +- 0.001
+Recall:  0.996 +- 0.001
+ROC:  0.594
+---------------
+Predicting fold #  1
+Predicting fold #  2
+Predicting fold #  3
+Predicting fold #  4
+Predicting fold #  5
+Adaboost
+Accuracy:  0.996 +- 0.001
+Precision:  0.995 +- 0.001
+Recall:  0.997 +- 0.001
+ROC:  0.994
+---------------
