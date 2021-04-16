@@ -1,4 +1,4 @@
-from .model import NewsClassifier
+import os
 import ssl
 import re
 import pickle
@@ -30,14 +30,14 @@ try:
 except LookupError:
     nltk.download('punkt')
 
-import os
-FILE_NAME = os.path.join(os.path.dirname(__file__), 'news_model.sav')
+
+MODEL_NAME = os.path.join(os.path.dirname(__file__), 'news_model')
 
 
-def load_data():
+def load_dataset1():
     """
     1 = True, 0 = Fake
-    Load in the true and fake news datasets
+    Load in dataset 1
     """
     true = pd.read_csv('./data/true.csv')
     true[LABEL_COL] = np.ones(true.shape[0]).astype('int')
@@ -47,6 +47,28 @@ def load_data():
     df[NEWS_COL] = df['title'] + ' ' + df['text']
     df = df.drop(columns=['title', 'text', 'subject', 'date'])
     df = df[[NEWS_COL, LABEL_COL]]    # reorder columns
+    return df
+
+
+def load_dataset2():
+    """
+    1 = True, 0 = Fake
+    Load in dataset 2
+    """
+    df = pd.read_csv('./data/news.csv')
+    df[NEWS_COL] = df['title'] + ' ' + df['text']
+
+    labels = []
+    for i in range(df.shape[0]):
+        if df.iloc[i]['label'] == 'FAKE':
+            labels.append(0)
+        else:
+            labels.append(1)
+
+    df[LABEL_COL] = labels
+    df = df.drop(columns=['title', 'text'])
+    df = df[[NEWS_COL, LABEL_COL]]    # reorder columns
+
     return df
 
 
@@ -68,11 +90,11 @@ def preprocess_text(df):
 
 
 def save_model(classifier):
-    pickle.dump(classifier, open(FILE_NAME, 'wb'))
+    pickle.dump(classifier, open(MODEL_NAME, 'wb'))
 
 
-def load_model() -> NewsClassifier:
-    return pickle.load(open(FILE_NAME, 'rb'))
+def load_model():
+    return pickle.load(open(MODEL_NAME, 'rb'))
 
 
 def predict(news_arr):
@@ -91,23 +113,22 @@ def predict(news_arr):
 if __name__ == '__main__':
     # df = load_data()
     # preprocess_text(df)
-    df = pickle.load(open('preproc_data', 'rb'))
-    classifier, acc, prec, rec, auc_val = train_full(df)
-    save_model(classifier)
+
+    '''
+    df = pickle.load(open('preproc_data_all', 'rb'))
 
     # Train
-    # classifier, acc, prec, rec, auc_val = train_full(df)
-    # print('Trained :', acc, prec, rec, auc_val)
-    # save_model(classifier)
+    classifier, acc, prec, rec, auc_val = train_full(df)
+    print('Trained :', acc, prec, rec, auc_val)
+    save_model(classifier)
+    '''
 
     classifier = load_model()
     # Predict
     # input should be an array. Each element is a single news (title + body)
-    str = open('true_n.txt', 'r').read()
-    news = pd.DataFrame(data=[str], columns=[NEWS_COL])
+    r = open('test_real.txt', 'r').read()
+    f = open('test_fake.txt', 'r').read()
+    news = pd.DataFrame(data=[r, f], columns=[NEWS_COL])
     preprocess_text(news)
     labels, confs = classifier.predict(news[NEWS_COL])
     print(labels, confs)
-
-
-
