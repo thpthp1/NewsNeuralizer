@@ -15,7 +15,7 @@ loggger = logging.getLogger('app_api')
 
 PROC_COUNT = 3
 
-with open(os.path.join(os.path.dirname(__file__), "feed-config.json"), "rb") as f:
+with open(os.path.join(os.path.dirname(__file__), "test_feed.json"), "rb") as f:
     FEED_JSON = json.load(f)
 
 def _article(link: str):
@@ -33,7 +33,6 @@ def news_feed() -> List[NewsArticle.NewsArticle]:
         link_pattern = re.compile(source["find"]["href"])
         links += [link.text for link in rss.find_all(source["find"]["element"]) 
                         if link_pattern.match(link.text)]
-    #print(links)
     with Pool(processes=PROC_COUNT) as pool:
         articles = pool.map(_article, links)
     return articles
