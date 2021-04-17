@@ -31,8 +31,8 @@ def predict_text(request):
     input_ser = PredictionInputSerializer(data=request.data)
     if not input_ser.is_valid():
         return JsonResponse({'error': 'Missing Parameters'}, status=status.HTTP_400_BAD_REQUEST)
-    proba = random.random()
-    result = {'prediction': proba > 0.5, 'proba': proba}
+    labels, confs = predict([input_ser.validated_data["selftext"]])
+    result = {'prediction': "Fake" if labels[0] == 0 else "True", 'proba': confs[0]}
     loggger.info(f"Prediction: {result}")
     return JsonResponse(result)
 
