@@ -5,6 +5,7 @@ function Article(props){
     return(
       <div className="article card h-100 shadow bg-white rounded">
         <div className="card-body d-flex flex-column">
+          <img class="card-img-top" src={props.image} alt="Card image cap" ></img>
           <h2 className="card-title">{props.title}</h2>
           <p className="probability">{props.prediction} {isNaN(props.probability) ? props.probability : parseFloat(props.probability * 100).toFixed(0) + '%'}</p>
           <p className="card-text">{props.body}</p>
