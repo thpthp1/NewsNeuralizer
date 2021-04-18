@@ -31,6 +31,7 @@ function ManualForm(props) {
     e.preventDefault();
     //alert(JSON.stringify(form, null, 2));
 
+    /*
     const mForm = {
       title: form.title,
       selftext: form.body,
@@ -38,8 +39,9 @@ function ManualForm(props) {
         categories: form.category
       }
     };
+    */
 
-    axios.post('http://localhost:8000/api/predict', {title: form.title, selftext: form.title})
+    axios.post('http://localhost:8000/api/predict', {title: form.title, selftext: form.body})
       .then(response => {
         //alert(JSON.stringify(response.data));
         setPrediction(response.data.prediction);
@@ -121,6 +123,7 @@ function InputtedForm(props) {
     e.preventDefault();
     //alert(JSON.stringify(form, null, 2));
 
+    /*
     const mForm = {
       title: form.title,
       selftext: form.body,
@@ -128,8 +131,9 @@ function InputtedForm(props) {
         categories: form.category
       }
     };
+    */
 
-    axios.post('http://localhost:8000/api/predict', {title: form.title, selftext: form.title})
+    axios.post('http://localhost:8000/api/predict', {title: form.title, selftext: form.body})
       .then(response => {
         //alert(JSON.stringify(response.data));
         setPrediction(response.data.prediction);
@@ -215,8 +219,6 @@ function UrlForm(props){
       link: url.url
     };
 
-    //axios.post("http://localhost:8000/api/link-info", {link:"https://www.cnn.com/2021/04/09/politics/marines-coronavirus-vaccines/index.html"}).then((response) => {console.log(response.data)});
-    //axios.post("http://localhost:8000/api/link-info", {link:url.url}).then((response) => {console.log(response.data)});
     //alert('Json being sent ' + JSON.stringify(mForm));
     axios.post('http://localhost:8000/api/link-info', {link:url.url})
       .then(response => {
