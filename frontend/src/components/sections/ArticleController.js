@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from "axios";
-import Article from "../Article";  
+import Article from "../Article";
 import './ArticleController.css'
 
 //One article for the news feed
@@ -21,9 +21,9 @@ function ArticleController(props){
     const [feed, setFeed] = useState();
     const [trueFeed, setTrueFeed] = useState([]);
     const [falseFeed, setFalseFeed] = useState([]);
-  
+
     const [rendered, setRendered] = useState(false);
-  
+
     useEffect(() => {
       //http://localhost:8000/api/news-feed
       axios.get("http://localhost:8000/api/news-feed")
@@ -35,14 +35,14 @@ function ArticleController(props){
         })
         .catch((err) => alert(err.message));
     }, []);
-  
+
     const displayFeed = () => {
       if(feed === undefined){
         return <Article title="Loading Title" prediction="Loading Prediction" probability="Loading Probability" body="Loading Body" url=""/>;
       }else{
         initializeTrueFalseFeed();
         const arrText = Object.values(feed);
-  
+
         return (
           <ul>
             {arrText.map((article, index) => (
@@ -55,53 +55,54 @@ function ArticleController(props){
         )
       }
     };
-  
+
     const initializeTrueFalseFeed = () => {
       if(rendered === false){
         setRendered(true);
-  
+
         var tFeed = feed.filter((article) => {
           return article.prediction === 'True';
         });
         console.log("True feed length is " + tFeed.length);
         setTrueFeed(tFeed);
-  
+
         var fFeed = feed.filter((article) => {
           return article.prediction === 'Fake';
         })
         console.log("False feed length is " + fFeed.length);
         setFalseFeed(fFeed);
-  
+
       }else{
         //true and false feeds have been initialized, so no need to do anything
       }
     };
-    
-    
+
+
     const displayDualFeed = () => {
       //Show loading screen if still fetching data
       if(feed === undefined){
         return(
-          <div key="103" className="row">
-            <div className="col-md-6">
-              <Article title="Loading True Feed" prediction="Loading Prediction" image="https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif" probability="and Probability" body="Loading Body"url="https://google.com"/>;          </div>
-            <div key="104" className="col-md-6">
-              <Article title="Loading False Feed" prediction="Loading Prediction" image="https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif" probability="and Probability" body="Loading Body"url="https://google.com"/>;          </div>
-          </div>
+          <div class="load-spinner"></div>
+          // <div key="103" className="row">
+          //   <div className="col-md-6">
+          //     <Article title="Loading True Feed" prediction="Loading Prediction" probability="and Probability" body="Loading Body"url="https://google.com"/>;          </div>
+          //   <div key="104" className="col-md-6">
+          //     <Article title="Loading False Feed" prediction="Loading Prediction" probability="and Probability" body="Loading Body"url="https://google.com"/>;          </div>
+          // </div>
         );
       }
-  
+
       //set the true or false feed
       initializeTrueFalseFeed();
-      
+
       var trueAmount = trueFeed.length;
       var falseAmount = falseFeed.length;
-  
+
       var smallerAmount = trueAmount < falseAmount ? trueAmount : falseAmount;
       var largerAmount = trueAmount > falseAmount ? trueAmount : falseAmount;
-      
+
       var rows = [];
-  
+
       //add the rows with both articles
       var i;
       for(i = 0; i < smallerAmount; i++){
@@ -116,7 +117,7 @@ function ArticleController(props){
           </div>
         );
       }
-      
+
       //add the remaining only true or false articles
       while(i < largerAmount){
         //only true left
@@ -144,15 +145,15 @@ function ArticleController(props){
         }
         i++;
       }
-  
+
       return (
         <div>
           {rows}
         </div>
       );
-  
+
     }
-    
+
     return(
       <div className=".article-controller-container" style={{ backgroundColor: '#111'}}>
         <div className="container-fluid" style={{ paddingBottom: '20px' }}>
