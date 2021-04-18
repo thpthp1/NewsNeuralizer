@@ -31,13 +31,14 @@ function ArticleController(props){
         .then((data) => {
           setCount(data.count)
           setFeed(data.feed); //Only important one
+          //alert(data.feed);
         })
         .catch((err) => alert(err.message));
     }, []);
   
     const displayFeed = () => {
       if(feed === undefined){
-        return <Article title="Loading Title" prediction="Loading Prediction" probability="Loading Probability" body="Loading Body"url="https://google.com"/>;
+        return <Article title="Loading Title" prediction="Loading Prediction" probability="Loading Probability" body="Loading Body" url=""/>;
       }else{
         initializeTrueFalseFeed();
         const arrText = Object.values(feed);
@@ -60,13 +61,13 @@ function ArticleController(props){
         setRendered(true);
   
         var tFeed = feed.filter((article) => {
-          return article.prediction === true;
+          return article.prediction === 'True';
         });
         console.log("True feed length is " + tFeed.length);
         setTrueFeed(tFeed);
   
         var fFeed = feed.filter((article) => {
-          return article.prediction === false;
+          return article.prediction === 'Fake';
         })
         console.log("False feed length is " + fFeed.length);
         setFalseFeed(fFeed);
@@ -83,9 +84,9 @@ function ArticleController(props){
         return(
           <div key="103" className="row">
             <div className="col-md-6">
-              <Article title="Loading True Feed" prediction="Loading Prediction" probability="and Probability" body="Loading Body"url="https://google.com"/>;          </div>
+              <Article title="Loading True Feed" prediction="Loading Prediction" image="https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif" probability="and Probability" body="Loading Body"url="https://google.com"/>;          </div>
             <div key="104" className="col-md-6">
-              <Article title="Loading False Feed" prediction="Loading Prediction" probability="and Probability" body="Loading Body"url="https://google.com"/>;          </div>
+              <Article title="Loading False Feed" prediction="Loading Prediction" image="https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif" probability="and Probability" body="Loading Body"url="https://google.com"/>;          </div>
           </div>
         );
       }
@@ -107,10 +108,10 @@ function ArticleController(props){
         rows.push(
           <div key={i} className="row">
             <div className="col-sm-6">
-              <Article title={trueFeed[i].url} prediction={JSON.stringify(trueFeed[i].prediction)} probability={trueFeed[i].proba} body={trueFeed[i].text} url={trueFeed[i].url} />
+              <Article title={trueFeed[i].url} prediction={JSON.stringify(trueFeed[i].prediction)} image={trueFeed[i].image} probability={trueFeed[i].proba} body={trueFeed[i].text} url={trueFeed[i].url} />
             </div>
             <div className="col-sm-6">
-              <Article title={falseFeed[i].url} prediction={JSON.stringify(falseFeed[i].prediction)} probability={falseFeed[i].proba} body={falseFeed[i].text} url={falseFeed[i].url} />
+              <Article title={falseFeed[i].url} prediction={JSON.stringify(falseFeed[i].prediction)} image={falseFeed[i].image} probability={falseFeed[i].proba} body={falseFeed[i].text} url={falseFeed[i].url} />
             </div>
           </div>
         );
@@ -123,7 +124,7 @@ function ArticleController(props){
           rows.push(
             <div key={i} className="row">
               <div className="col-sm-6">
-                <Article key={i} title={trueFeed[i].url} prediction={JSON.stringify(trueFeed[i].prediction)} probability={trueFeed[i].proba} body={trueFeed[i].text} url={trueFeed[i].url} />
+                <Article key={i} title={trueFeed[i].url} prediction={JSON.stringify(trueFeed[i].prediction)} image={trueFeed[i].image} probability={trueFeed[i].proba} body={trueFeed[i].text} url={trueFeed[i].url} />
               </div>
               <div className="col-sm-6">
               </div>
@@ -136,7 +137,7 @@ function ArticleController(props){
               <div className="col-sm-6">
               </div>
               <div className="col-sm-6">
-                <Article title={falseFeed[i].url} prediction={JSON.stringify(falseFeed[i].prediction)} probability={falseFeed[i].proba} body={falseFeed[i].text} url={falseFeed[i].url} />
+                <Article title={falseFeed[i].url} prediction={JSON.stringify(falseFeed[i].prediction)} image={falseFeed[i].image} probability={falseFeed[i].proba} body={falseFeed[i].text} url={falseFeed[i].url} />
               </div>
             </div>
           );
