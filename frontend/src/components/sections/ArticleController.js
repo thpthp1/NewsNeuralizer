@@ -81,12 +81,13 @@ function ArticleController(props){
       //Show loading screen if still fetching data
       if(feed === undefined){
         return(
-          <div key="103" className="row">
-            <div className="col-md-6">
-              <Article title="Loading True Feed" prediction="Loading Prediction" probability="and Probability" body="Loading Body"url="https://google.com"/>;          </div>
-            <div key="104" className="col-md-6">
-              <Article title="Loading False Feed" prediction="Loading Prediction" probability="and Probability" body="Loading Body"url="https://google.com"/>;          </div>
-          </div>
+          <div class="load-spinner"></div>
+          // <div key="103" className="row">
+          //   <div className="col-md-6">
+          //     <Article title="Loading True Feed" prediction="Loading Prediction" probability="and Probability" body="Loading Body"url="https://google.com"/>;          </div>
+          //   <div key="104" className="col-md-6">
+          //     <Article title="Loading False Feed" prediction="Loading Prediction" probability="and Probability" body="Loading Body"url="https://google.com"/>;          </div>
+          // </div>
         );
       }
   
