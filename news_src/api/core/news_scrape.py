@@ -27,16 +27,18 @@ def _article(link: str):
     if News.objects.filter(url=link).exists():
         news = News.objects.get(url=link)
         article = newsplease.NewsPlease()
+        article.title = news.title
         article.maintext = news.text
         article.url = news.url
         article.image_url = news.image
-        article.date_publish = news.date_publish
+        article.date_publish = news.date_publish.isoformat() if news.date_publish is not None else ""
         article.source_domain = news.source_domain
     else:
         article = newsplease.NewsPlease.from_url(url=link)
         if article.maintext is None:
             return
         news = News(text=article.maintext, 
+                    title=article.title,
                     url=article.url,
                     image=article.image_url,
                     date_publish=article.date_publish,
