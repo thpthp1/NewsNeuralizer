@@ -31,7 +31,7 @@ def predict_text(request):
     input_ser = PredictionInputSerializer(data=request.data)
     if not input_ser.is_valid():
         return JsonResponse({'error': 'Missing Parameters'}, status=status.HTTP_400_BAD_REQUEST)
-    labels, confs = predict([input_ser.validated_data["selftext"]])
+    labels, confs = predict([input_ser.validated_data["title"] + " " + input_ser.validated_data["selftext"]])
     result = {'prediction': "Fake" if labels[0] == 0 else "True", 'proba': confs[0]}
     loggger.info(f"Prediction: {result}")
     return JsonResponse(result)
@@ -42,27 +42,14 @@ def feed(request):
     return_feed = _return_feed(articles)
     return JsonResponse({"count": len(return_feed), "feed": return_feed})
 
-def _analyze(article: NewsArticle.NewsArticle):
-    label, conf = news_predict(article.maintext)
-    return {
-                "text": article.maintext,
-                "url": article.url,
-                "image": article.image_url,
-                "date_publish": article.date_publish,
-                "source_domain": article.source_domain,
-                'prediction': conf[0],
-                'proba': "Fake" if label[0] == 0 else "True" 
-            }
-
 
 def _return_feed(news_feed: List[NewsArticle.NewsArticle]):
     return_feed = []
-    # with Pool(processes=PROC_COUNT) as pool:
-    #     return_feed = pool.map(_analyze, news_feed)
-    labels, confs = predict([article.maintext for article in news_feed])
+    labels, confs = predict([article.title + " " + article.maintext for article in news_feed])
     for article, label, conf in zip(news_feed, labels, confs):
         return_feed.append(
             {
+                "title": article.title,
                 "text": article.maintext,
                 "url": article.url,
                 "image": article.image_url,
