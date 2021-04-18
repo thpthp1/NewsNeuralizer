@@ -26,7 +26,7 @@ loggger = logging.getLogger('django')
 TIMEOUT = 5 * 60 
 PROC_COUNT = 3
 
-@api_view(['GET', 'POST'])
+@api_view(['POST'])
 def predict_text(request):
     input_ser = PredictionInputSerializer(data=request.data)
     if not input_ser.is_valid():
@@ -36,7 +36,7 @@ def predict_text(request):
     loggger.info(f"Prediction: {result}")
     return JsonResponse(result)
 
-@api_view(['GET', 'POST'])
+@api_view(['GET'])
 def feed(request):
     articles = news_feed()
     return_feed = _return_feed(articles)
@@ -73,7 +73,7 @@ def _return_feed(news_feed: List[NewsArticle.NewsArticle]):
             })
     return return_feed
 
-@api_view(['GET', 'POST'])
+@api_view(['POST'])
 def link_info(request):
     link_ser = LinkScrapeSerializer(data=request.data)
     if not link_ser.is_valid():
