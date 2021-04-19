@@ -214,10 +214,11 @@ function UrlForm(props){
     e.preventDefault();
     //alert(JSON.stringify(form, null, 2));
 
-    //https://cnn.com
+    /*
     const mForm = {
       link: url.url
     };
+    */
 
     //alert('Json being sent ' + JSON.stringify(mForm));
     axios.post('http://localhost:8000/api/link-info', {link:url.url})
@@ -235,7 +236,7 @@ function UrlForm(props){
         }else{
 
         }
-
+        
         setGathered(true);
       })
   };
@@ -245,7 +246,7 @@ function UrlForm(props){
     if(gathered){
       return(
         <div>
-          <InputtedForm header="Here's what we gathered" title={title} body={body}/>
+          <InputtedForm header="Here's what we gathered." title={title} body={body}/>
         </div>
       )
     }else{
