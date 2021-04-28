@@ -59,7 +59,7 @@ function ManualForm(props) {
       )
     }else if (submitted) {
       return(
-        <div className="load-spinner"></div>
+        <div className="load-spinner" />
       )
     } else {
       return (<div />);
