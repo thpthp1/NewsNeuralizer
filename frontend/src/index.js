@@ -20,6 +20,12 @@ function ManualForm(props) {
   const [probability, setProbability] = useState('');
   const [prediction, setPrediction] = useState('');
 
+  const [showForm, setShowForm] = useState({
+    url: props.url,
+    title: props.title,
+    body: props.body,
+  });
+
   const handleChange = ({ target }) => {
     const { name, value } = target;
     setForm((prev) => ({
@@ -48,6 +54,13 @@ function ManualForm(props) {
         //alert(JSON.stringify(response.data));
         setPrediction(response.data.prediction);
         setProbability(response.data.proba);
+
+        setShowForm({
+          url: form.url,
+          title: form.title,
+          body: form.body
+        });
+
         setProcessed(true);
       });
   };
@@ -55,7 +68,7 @@ function ManualForm(props) {
   const displayResult = () => {
     if(processed){
       return(
-        <Verdict title={form.title} body={form.body} prediction={prediction} probability={probability}/>
+        <Verdict title={showForm.title} body={showForm.body} prediction={prediction} probability={probability}/>
       )
     }else if (submitted) {
       return(
@@ -115,6 +128,12 @@ function InputtedForm(props) {
   const [probability, setProbability] = useState('');
   const [prediction, setPrediction] = useState();
 
+  const [showForm, setShowForm] = useState({
+    url: props.url,
+    title: props.title,
+    body: props.body,
+  });
+
   const handleChange = ({ target }) => {
     const { name, value } = target;
     setForm((prev) => ({
@@ -127,22 +146,19 @@ function InputtedForm(props) {
     e.preventDefault();
     //alert(JSON.stringify(form, null, 2));
 
-    /*
-    const mForm = {
-      title: form.title,
-      selftext: form.body,
-      optionals: { 
-        categories: form.category
-      }
-    };
-    */
-
     axios.post('http://localhost:8000/api/predict', {title: form.title, selftext: form.body})
       .then(response => {
         //alert(JSON.stringify(response.data));
         setPrediction(response.data.prediction);
         //alert(response.data.prediction);
         setProbability(response.data.proba);
+
+        setShowForm({
+          url: form.url,
+          title: form.title,
+          body: form.body
+        });
+
         setProcessed(true);
       });
   };
@@ -150,7 +166,7 @@ function InputtedForm(props) {
   const displayResult = () => {
     if(processed){
       return(
-        <Verdict title={form.title} body={form.body} prediction={prediction} probability={probability}/>
+        <Verdict title={showForm.title} body={showForm.body} prediction={prediction} probability={probability}/>
       )
     }else{
       return(
@@ -214,6 +230,13 @@ function UrlForm(props){
     }));
   };
 
+  const resetForm = () => {
+    setUrl('');
+    setTitle('');
+    //setBody('');
+    setGathered(false);
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     //alert(JSON.stringify(form, null, 2));
@@ -223,6 +246,7 @@ function UrlForm(props){
       link: url.url
     };
     */
+    resetForm();
 
     //alert('Json being sent ' + JSON.stringify(mForm));
     axios.post('http://localhost:8000/api/link-info', {link:url.url})
