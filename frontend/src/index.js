@@ -10,6 +10,7 @@ import ArticleForm from './components/sections/ArticleForm';
 function ManualForm(props) {
   const [header, setHeader] = useState(props.header);
   const [processed, setProcessed] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
   const [form, setForm] = useState({
     url: props.url,
     title: props.title,
@@ -35,6 +36,7 @@ function ManualForm(props) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setSubmitted(true);
     //alert(JSON.stringify(form, null, 2));
 
     /*
@@ -68,10 +70,12 @@ function ManualForm(props) {
       return(
         <Verdict title={showForm.title} body={showForm.body} prediction={prediction} probability={probability}/>
       )
-    }else{
+    }else if (submitted) {
       return(
-        <h1></h1>
+        <div className="load-spinner" />
       )
+    } else {
+      return (<div />);
     }
   }
 
@@ -242,7 +246,6 @@ function UrlForm(props){
       link: url.url
     };
     */
-
     resetForm();
 
     //alert('Json being sent ' + JSON.stringify(mForm));
