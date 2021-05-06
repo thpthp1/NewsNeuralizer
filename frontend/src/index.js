@@ -10,7 +10,6 @@ import ArticleForm from './components/sections/ArticleForm';
 function ManualForm(props) {
   const [header, setHeader] = useState(props.header);
   const [processed, setProcessed] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
   const [form, setForm] = useState({
     url: props.url,
     title: props.title,
@@ -36,7 +35,6 @@ function ManualForm(props) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setSubmitted(true);
     //alert(JSON.stringify(form, null, 2));
 
     /*
@@ -68,14 +66,12 @@ function ManualForm(props) {
   const displayResult = () => {
     if(processed){
       return(
-        <Verdict title={showForm.title} body={showForm.body} prediction={prediction} probability={probability}/>
+        <Verdict data-testid="verdict" title={showForm.title} body={showForm.body} prediction={prediction} probability={probability}/>
       )
-    }else if (submitted) {
+    }else{
       return(
-        <div className="load-spinner" />
+        <h1></h1>
       )
-    } else {
-      return (<div />);
     }
   }
 
@@ -89,15 +85,15 @@ function ManualForm(props) {
           <form onSubmit={handleSubmit}>
             <div className="form-group">
               <label for="title" className="" style={{ color: 'white' }}>Title:</label>
-              <input type="text" name="title" onChange={handleChange} className="form-control" placeholder="Title" value={form.title}></input>
+              <input data-testid="titleInput" type="text" name="title" onChange={handleChange} className="form-control" placeholder="Title" value={form.title}></input>
             </div>
 
             <div className="form-group">
               <label for="body" className="" style={{ color: 'white' }}>Article Body:</label>
-              <textarea type="text" name="body" onChange={handleChange} className="form-control" placeholder="Article Body Paragraphs" rows="5" value={form.body}></textarea>
+              <textarea data-testid="bodyTextArea" type="text" name="body" onChange={handleChange} className="form-control" placeholder="Article Body Paragraphs" rows="5" value={form.body}></textarea>
             </div>
 
-            <button type="submit" className="btn btn-secondary btn-lg col-md-12 mb-3">Neuralize</button>
+            <button data-testid="subButMan" type="submit" className="btn btn-secondary btn-lg col-md-12 mb-3">Neuralize</button>
           </form>
           {displayResult()}
         </div>
@@ -166,7 +162,7 @@ function InputtedForm(props) {
   const displayResult = () => {
     if(processed){
       return(
-        <Verdict title={showForm.title} body={showForm.body} prediction={prediction} probability={probability}/>
+        <Verdict data-testid="verdict" title={showForm.title} body={showForm.body} prediction={prediction} probability={probability}/>
       )
     }else{
       return(
@@ -185,15 +181,15 @@ function InputtedForm(props) {
           <form onSubmit={handleSubmit}>
             <div className="form-group">
               <label for="title" className="" style={{ color: 'white' }}>Title:</label>
-              <input type="text" name="title" onChange={handleChange} className="form-control" placeholder="Title" value={form.title}></input>
+              <input data-testid="titleInput" type="text" name="title" onChange={handleChange} className="form-control" placeholder="Title" value={form.title}></input>
             </div>
 
             <div className="form-group">
               <label for="body" className="" style={{ color: 'white' }}>Article Body:</label>
-              <textarea type="text" name="body" onChange={handleChange} className="form-control" placeholder="Article Body Paragraphs" rows="5" value={form.body}></textarea>
+              <textarea data-testid="bodyTextArea" type="text" name="body" onChange={handleChange} className="form-control" placeholder="Article Body Paragraphs" rows="5" value={form.body}></textarea>
             </div>
 
-            <button type="submit" className="btn btn-secondary btn-lg col-md-12 mb-3">Neuralize</button>
+            <button data-testid="subButInp" type="submit" className="btn btn-secondary btn-lg col-md-12 mb-3">Neuralize</button>
           </form>
           {displayResult()}
         </div>
@@ -208,9 +204,9 @@ function Verdict(props){
   return(
     <div className="article card h-100 shadow bg-white rounded">
       <div className="card-body d-flex flex-column">
-        <h2 className="card-title">{props.title}</h2>
-        <p className="probability">{props.prediction} {isNaN(props.probability) ? props.probability : parseFloat(props.probability * 100).toFixed(0) + '%'}</p>
-        <p className="card-text">{props.body}</p>
+        <h2 data-testid="title" className="card-title">{props.title}</h2>
+        <p data-testid="predictionAndProbability" className="probability">{props.prediction} {isNaN(props.probability) ? props.probability : parseFloat(props.probability * 100).toFixed(0) + '%'}</p>
+        <p data-testid="body" className="card-text">{props.body}</p>
       </div>
     </div>
   )
@@ -246,6 +242,7 @@ function UrlForm(props){
       link: url.url
     };
     */
+
     resetForm();
 
     //alert('Json being sent ' + JSON.stringify(mForm));
@@ -296,9 +293,9 @@ function UrlForm(props){
             <form onSubmit={handleSubmit}>
               <div className="form-group">
                 <label for="url" className="mt-3" style={{ color: 'white' }}>URL:</label>
-                <input type="text" name="url" onChange={handleChange} className="form-control" placeholder="example.com"></input>
+                <input data-testid="urlInput" type="text" name="url" onChange={handleChange} className="form-control" placeholder="example.com"></input>
               </div>
-              <button type="submit" data-toggle="modal" data-target="#exampleModal" className="btn btn-secondary btn-lg col-md-12 mb-3">Autofill</button>
+              <button data-testid="subButUrl" type="submit" data-toggle="modal" data-target="#exampleModal" className="btn btn-secondary btn-lg col-md-12 mb-3">Autofill</button>
             </form>
           </div>
         </div>
@@ -309,7 +306,9 @@ function UrlForm(props){
 
 }
 
-export default UrlForm
+export default UrlForm;
+export {InputtedForm, ManualForm, Verdict};
+
 
 ReactDOM.render(
   <React.StrictMode>
@@ -317,6 +316,7 @@ ReactDOM.render(
   </React.StrictMode>,
   document.getElementById('root')
 );
+
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))

@@ -3,19 +3,6 @@ import axios from "axios";
 import Article from "../Article";
 import './ArticleController.css'
 
-//One article for the news feed
-// function Verdict(props){
-//     return(
-//       <div className="article card h-100 shadow bg-white rounded">
-//         <div className="card-body d-flex flex-column">
-//           <h2 className="card-title">{props.title}</h2>
-//           <p className="probability">{props.prediction} {isNaN(props.probability) ? props.probability : parseFloat(props.probability * 100).toFixed(0) + '%'}</p>
-//           <p className="card-text">{props.body}</p>
-//         </div>
-//       </div>
-//     )
-//   }
-
 function ArticleController(props){
     const [count, setCount] = useState();
     const [feed, setFeed] = useState();
@@ -82,14 +69,7 @@ function ArticleController(props){
       //Show loading screen if still fetching data
       if(feed === undefined){
         return(
-          //<div class="load-spinner"></div>
-          // <div key="103" className="row">
-          //   <div className="col-md-6">
-          //     <Article title="Loading True Feed" prediction="Loading Prediction" probability="and Probability" body="Loading Body"url="https://google.com"/>;          </div>
-          //   <div key="104" className="col-md-6">
-          //     <Article title="Loading False Feed" prediction="Loading Prediction" probability="and Probability" body="Loading Body"url="https://google.com"/>;          </div>
-          // </div>
-          <div key={i} className="row">
+          <div data-testid="feedLoading" key={i} className="row">
             <div className="col-sm-6">
               <div class="load-spinner"></div>
             </div>
@@ -163,7 +143,7 @@ function ArticleController(props){
     }
 
     return(
-      <div className=".article-controller-container" style={{ backgroundColor: '#111'}}>
+      <div data-testid="feedLoaded" className=".article-controller-container" style={{ backgroundColor: '#111'}}>
         <div className="container-fluid" style={{ paddingBottom: '20px' }}>
           <div className="row">
             <div className="col-md-6">

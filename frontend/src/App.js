@@ -8,9 +8,9 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 function App() {
   return (
        <>
-        <Welcome />
-        <ManualForm />
-        <ArticleController />
+        <Welcome data-testid="welcome"/>
+        <ManualForm data-testid="manualForm"/>
+        <ArticleController data-testid="articleController"/>
        </>
   );
 }
