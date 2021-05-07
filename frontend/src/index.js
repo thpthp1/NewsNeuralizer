@@ -121,6 +121,7 @@ function InputtedForm(props) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+=======
 
     axios.post('http://localhost:8000/api/predict', {title: form.title, selftext: form.body})
       .then(response => {
@@ -213,7 +214,6 @@ function UrlForm(props){
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
     resetForm();
 
     axios.post('http://localhost:8000/api/link-info', {link:url.url})
