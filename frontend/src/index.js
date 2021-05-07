@@ -213,7 +213,6 @@ function UrlForm(props){
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
     resetForm();
 
     axios.post('http://localhost:8000/api/link-info', {link:url.url})
