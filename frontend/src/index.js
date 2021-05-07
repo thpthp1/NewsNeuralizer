@@ -121,7 +121,6 @@ function InputtedForm(props) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-=======
 
     axios.post('http://localhost:8000/api/predict', {title: form.title, selftext: form.body})
       .then(response => {
