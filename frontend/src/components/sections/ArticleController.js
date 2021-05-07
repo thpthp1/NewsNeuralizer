@@ -3,6 +3,7 @@ import axios from "axios";
 import Article from "../Article";
 import './ArticleController.css'
 
+//Controller to display articles 
 function ArticleController(props){
     const [count, setCount] = useState();
     const [feed, setFeed] = useState();
@@ -12,17 +13,16 @@ function ArticleController(props){
     const [rendered, setRendered] = useState(false);
 
     useEffect(() => {
-      //http://localhost:8000/api/news-feed
       axios.get("http://localhost:8000/api/news-feed")
         .then(response => response.data)
         .then((data) => {
           setCount(data.count)
-          setFeed(data.feed); //Only important one
-          //alert(data.feed);
+          setFeed(data.feed);
         })
         .catch((err) => alert(err.message));
     }, []);
 
+    //This displays one feed for extra functionality but is not used right now
     const displayFeed = () => {
       if(feed === undefined){
         return <Article title="Loading Title" prediction="Loading Prediction" probability="Loading Probability" body="Loading Body" url=""/>;
