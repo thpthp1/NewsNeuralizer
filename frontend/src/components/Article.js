@@ -3,7 +3,6 @@ import './Article.css'
 
 //One article for the news feed
 function Article(props){
-  
   return(
       <div className="article card h-100 shadow bg-white rounded">
         <div className="card-body d-flex flex-column">
