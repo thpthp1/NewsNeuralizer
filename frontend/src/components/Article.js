@@ -15,11 +15,11 @@ function Article(props){
             </div>
           </div>
           <div className="probability-container" style={{background: props.prediction === '\"True\"' ? 'green' : 'red'}}>
-            <div className="probability">{props.prediction} {isNaN(props.probability) ? props.probability : parseFloat(props.probability * 100).toFixed(0) + '%'}</div>
+            <div data-testid="predictionAndProbability" className="probability">{props.prediction} {isNaN(props.probability) ? props.probability : parseFloat(props.probability * 100).toFixed(0) + '%'}</div>
           </div>
-          
-          <p className="card-text">{props.body}</p>
-          <a href={props.url} target="_blank" rel="noreferrer noopener" className="btn btn-md btn-outline-primary mt-auto">Visit Source</a>
+
+          <p data-testid="body" className="card-text">{props.body}</p>
+          <a data-testid="url" href={props.url} target="_blank" rel="noreferrer noopener" className="btn btn-md btn-outline-primary mt-auto">Visit Source</a>
         </div>
       </div>
     )
