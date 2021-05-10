@@ -130,3 +130,5 @@ dmypy.json
 .pyre/
 
 dev/
+news_src/api/migrations/__init__.py
+news_src/api/migrations/0001_initial.py
