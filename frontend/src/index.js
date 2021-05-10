@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import ReactDOM, { render } from 'react-dom';
+import React, { useState } from 'react';
+import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import axios from "axios";
-import ArticleForm from './components/sections/ArticleForm';
 
 //The form components for manual user input
 function ManualForm(props) {
