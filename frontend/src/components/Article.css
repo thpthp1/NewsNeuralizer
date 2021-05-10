@@ -1,6 +1,17 @@
-
 .head-row {
     width: 50%;
     float: left;
     padding: 5px;
+}
+
+.probability-container {
+    border-radius: 25px;
+    width: fit-content;
+    padding: 10px;
+    height: fit-content;
+}
+
+.probability {
+    font-size: 20pt;
+    color: white;
 }

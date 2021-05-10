@@ -1,8 +1,7 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
-import { Button } from '../Button'
 import './ArticleForm.css'
 import Verdict from './Verdict.js'
+import Button from '../Button.js'
 
 function ArticleForm() {
 
