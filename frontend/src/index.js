@@ -70,7 +70,7 @@ function ManualForm(props) {
       return(
         <Verdict title={showForm.title} body={showForm.body} prediction={prediction} probability={probability}/>
       )
-    }else if (submitted) {
+    }else if (submitted && showForm.title) {
       return(
         <div className="load-spinner" />
       )
@@ -209,7 +209,9 @@ function Verdict(props){
     <div className="article card h-100 shadow bg-white rounded">
       <div className="card-body d-flex flex-column">
         <h2 className="card-title">{props.title}</h2>
-        <p className="probability">{props.prediction} {isNaN(props.probability) ? props.probability : parseFloat(props.probability * 100).toFixed(0) + '%'}</p>
+        <div className="probability-container" style={{background: props.prediction === '\"True\"' ? 'green' : 'red'}}>
+          <div className="probability">{props.prediction} {isNaN(props.probability) ? props.probability : parseFloat(props.probability * 100).toFixed(0) + '%'}</div>
+        </div>
         <p className="card-text">{props.body}</p>
       </div>
     </div>
