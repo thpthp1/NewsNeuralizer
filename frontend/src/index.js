@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import ReactDOM, { render } from 'react-dom';
+import React, { useState } from 'react';
+import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import axios from "axios";
-import ArticleForm from './components/sections/ArticleForm';
 
 const backendUrl = "http://localhost:8000";
 
@@ -56,7 +55,7 @@ function ManualForm(props) {
       });
   };
 
-  //Displays processed results, otherwise shows nothing
+  //Displays processed results, otherwise shows loading sign or nothing if the text fields are empty
   const displayResult = () => {
     if(processed){
       return(
@@ -111,7 +110,7 @@ function InputtedForm(props) {
   });
   const [probability, setProbability] = useState('');
   const [prediction, setPrediction] = useState();
-
+  const [submitted, setSubmitted] = useState(false);
   const [showForm, setShowForm] = useState({
     url: props.url,
     title: props.title,
@@ -128,7 +127,7 @@ function InputtedForm(props) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
+    setSubmitted(true);
     axios.post(backendUrl+'/api/predict', {title: form.title, selftext: form.body})
       .then(response => {
         setPrediction(response.data.prediction);
@@ -150,10 +149,12 @@ function InputtedForm(props) {
       return(
         <Verdict data-testid="verdict" title={showForm.title} body={showForm.body} prediction={prediction} probability={probability}/>
       )
-    }else{
+    } else if (submitted && showForm.title) {
       return(
-        <h1></h1>
+        <div className="load-spinner" />
       )
+    } else {
+      return (<div />);
     }
   }
 
@@ -192,7 +193,7 @@ function Verdict(props){
       <div className="card-body d-flex flex-column">
         <h2 data-testid="title" className="card-title">{props.title}</h2>
         <div className="probability-container" style={{background: props.prediction === 'True' ? 'green' : 'red'}}>
-          <p data-testid="predictionAndProbability" className="probability">{props.prediction} {isNaN(props.probability) ? props.probability : parseFloat(props.probability * 100).toFixed(0) + '%'}</p>
+          <div data-testid="predictionAndProbability" className="probability">{props.prediction} {isNaN(props.probability) ? props.probability : parseFloat(props.probability * 100).toFixed(0) + '%'}</div>
         </div>
         <p data-testid="body" className="card-text">{props.body}</p>
       </div>
