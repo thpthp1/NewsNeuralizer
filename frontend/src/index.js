@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import ReactDOM, { render } from 'react-dom';
+import React, { useState } from 'react';
+import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import axios from "axios";
-import ArticleForm from './components/sections/ArticleForm';
 
 const backendUrl = "http://localhost:8000";
 
@@ -12,6 +11,7 @@ const backendUrl = "http://localhost:8000";
 function ManualForm(props) {
   const [header, setHeader] = useState(props.header);
   const [processed, setProcessed] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
   const [form, setForm] = useState({
     url: props.url,
     title: props.title,
@@ -37,9 +37,22 @@ function ManualForm(props) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setSubmitted(true);
+    //alert(JSON.stringify(form, null, 2));
+
+    /*
+    const mForm = {
+      title: form.title,
+      selftext: form.body,
+      optionals: { 
+        categories: form.category
+      }
+    };
+    */
 
     axios.post(backendUrl+'/api/predict', {title: form.title, selftext: form.body})
       .then(response => {
+        //alert(JSON.stringify(response.data));
         setPrediction(response.data.prediction);
         setProbability(response.data.proba);
 
@@ -53,16 +66,17 @@ function ManualForm(props) {
       });
   };
 
-  //Displays processed results, otherwise shows nothing
   const displayResult = () => {
     if(processed){
       return(
-        <Verdict data-testid="verdict" title={showForm.title} body={showForm.body} prediction={prediction} probability={probability}/>
+        <Verdict title={showForm.title} body={showForm.body} prediction={prediction} probability={probability}/>
       )
-    }else{
+    }else if (submitted && showForm.title) {
       return(
-        <h1></h1>
+        <div className="load-spinner" />
       )
+    } else {
+      return (<div />);
     }
   }
 
@@ -76,15 +90,15 @@ function ManualForm(props) {
           <form onSubmit={handleSubmit}>
             <div className="form-group">
               <label for="title" className="" style={{ color: 'white' }}>Title:</label>
-              <input data-testid="titleInput" type="text" name="title" onChange={handleChange} className="form-control" placeholder="Title" value={form.title}></input>
+              <input type="text" name="title" onChange={handleChange} className="form-control" placeholder="Title" value={form.title}></input>
             </div>
 
             <div className="form-group">
               <label for="body" className="" style={{ color: 'white' }}>Article Body:</label>
-              <textarea data-testid="bodyTextArea" type="text" name="body" onChange={handleChange} className="form-control" placeholder="Article Body Paragraphs" rows="5" value={form.body}></textarea>
+              <textarea type="text" name="body" onChange={handleChange} className="form-control" placeholder="Article Body Paragraphs" rows="5" value={form.body}></textarea>
             </div>
 
-            <button data-testid="subButMan" type="submit" className="btn btn-secondary btn-lg col-md-12 mb-3">Neuralize</button>
+            <button type="submit" className="btn btn-secondary btn-lg col-md-12 mb-3">Neuralize</button>
           </form>
           {displayResult()}
         </div>
@@ -93,6 +107,14 @@ function ManualForm(props) {
     </div>
   )
 }
+
+/*
+ManualForm.defaultProps = {
+  url: '',
+  title: '',
+  body: ''
+}
+*/
 
 //The form components for scraped user input
 function InputtedForm(props) {
@@ -123,10 +145,13 @@ function InputtedForm(props) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    //alert(JSON.stringify(form, null, 2));
 
     axios.post(backendUrl+'/api/predict', {title: form.title, selftext: form.body})
       .then(response => {
+        //alert(JSON.stringify(response.data));
         setPrediction(response.data.prediction);
+        //alert(response.data.prediction);
         setProbability(response.data.proba);
 
         setShowForm({
@@ -139,11 +164,10 @@ function InputtedForm(props) {
       });
   };
 
-  //Displays processed results, otherwise shows nothing
   const displayResult = () => {
     if(processed){
       return(
-        <Verdict data-testid="verdict" title={showForm.title} body={showForm.body} prediction={prediction} probability={probability}/>
+        <Verdict title={showForm.title} body={showForm.body} prediction={prediction} probability={probability}/>
       )
     }else{
       return(
@@ -162,15 +186,15 @@ function InputtedForm(props) {
           <form onSubmit={handleSubmit}>
             <div className="form-group">
               <label for="title" className="" style={{ color: 'white' }}>Title:</label>
-              <input data-testid="titleInput" type="text" name="title" onChange={handleChange} className="form-control" placeholder="Title" value={form.title}></input>
+              <input type="text" name="title" onChange={handleChange} className="form-control" placeholder="Title" value={form.title}></input>
             </div>
 
             <div className="form-group">
               <label for="body" className="" style={{ color: 'white' }}>Article Body:</label>
-              <textarea data-testid="bodyTextArea" type="text" name="body" onChange={handleChange} className="form-control" placeholder="Article Body Paragraphs" rows="5" value={form.body}></textarea>
+              <textarea type="text" name="body" onChange={handleChange} className="form-control" placeholder="Article Body Paragraphs" rows="5" value={form.body}></textarea>
             </div>
 
-            <button data-testid="subButInp" type="submit" className="btn btn-secondary btn-lg col-md-12 mb-3">Neuralize</button>
+            <button type="submit" className="btn btn-secondary btn-lg col-md-12 mb-3">Neuralize</button>
           </form>
           {displayResult()}
         </div>
@@ -180,20 +204,21 @@ function InputtedForm(props) {
   )
 }
 
-//One processed article from the user
+//One article for the news feed
 function Verdict(props){
   return(
     <div className="article card h-100 shadow bg-white rounded">
       <div className="card-body d-flex flex-column">
-        <h2 data-testid="title" className="card-title">{props.title}</h2>
-        <p data-testid="predictionAndProbability" className="probability">{props.prediction} {isNaN(props.probability) ? props.probability : parseFloat(props.probability * 100).toFixed(0) + '%'}</p>
-        <p data-testid="body" className="card-text">{props.body}</p>
+        <h2 className="card-title">{props.title}</h2>
+        <div className="probability-container" style={{background: props.prediction === 'True' ? 'green' : 'red'}}>
+          <div className="probability">{props.prediction} {isNaN(props.probability) ? props.probability : parseFloat(props.probability * 100).toFixed(0) + '%'}</div>
+        </div>
+        <p className="card-text">{props.body}</p>
       </div>
     </div>
   )
 }
 
-//Url input form with manual/inputted form attached
 function UrlForm(props){
   const [url, setUrl] = useState('');
   const [title, setTitle] = useState('');
@@ -203,6 +228,7 @@ function UrlForm(props){
   const handleChange = ({ target }) => {
     const { name, value } = target;
     setUrl((prev) => ({
+      //...prev,
       [name]: value
     }));
   };
@@ -210,14 +236,27 @@ function UrlForm(props){
   const resetForm = () => {
     setUrl('');
     setTitle('');
+    //setBody('');
     setGathered(false);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    //alert(JSON.stringify(form, null, 2));
+
+    /*
+    const mForm = {
+      link: url.url
+    };
+    */
     resetForm();
 
+<<<<<<< HEAD
     axios.post(backendUrl+'/api/link-info', {link:url.url})
+=======
+    //alert('Json being sent ' + JSON.stringify(mForm));
+    axios.post('http://localhost:8000/api/link-info', {link:url.url})
+>>>>>>> main
       .then(response => {
         if(response.data.title != null){
           setTitle(response.data.title);
@@ -237,7 +276,7 @@ function UrlForm(props){
       })
   };
   
-  //Displays manual form until the user decides to use the url. Scraper results are then shown in the form
+
   const displayManualForm = () => {
     if(gathered){
       return(
@@ -264,9 +303,9 @@ function UrlForm(props){
             <form onSubmit={handleSubmit}>
               <div className="form-group">
                 <label for="url" className="mt-3" style={{ color: 'white' }}>URL:</label>
-                <input data-testid="urlInput" type="text" name="url" onChange={handleChange} className="form-control" placeholder="example.com"></input>
+                <input type="text" name="url" onChange={handleChange} className="form-control" placeholder="example.com"></input>
               </div>
-              <button data-testid="subButUrl" type="submit" data-toggle="modal" data-target="#exampleModal" className="btn btn-secondary btn-lg col-md-12 mb-3">Autofill</button>
+              <button type="submit" data-toggle="modal" data-target="#exampleModal" className="btn btn-secondary btn-lg col-md-12 mb-3">Autofill</button>
             </form>
           </div>
         </div>
@@ -277,9 +316,13 @@ function UrlForm(props){
 
 }
 
+<<<<<<< HEAD
 export default UrlForm;
 export {InputtedForm, ManualForm, Verdict, backendUrl};
 
+=======
+export default UrlForm
+>>>>>>> main
 
 ReactDOM.render(
   <React.StrictMode>
@@ -288,4 +331,7 @@ ReactDOM.render(
   document.getElementById('root')
 );
 
+// If you want to start measuring performance in your app, pass a function
+// to log results (for example: reportWebVitals(console.log))
+// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();
