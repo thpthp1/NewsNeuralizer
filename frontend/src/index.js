@@ -20,6 +20,7 @@ function ManualForm(props) {
   });
   const [probability, setProbability] = useState('');
   const [prediction, setPrediction] = useState('');
+  const [submitted, setSubmitted] = useState(false);
 
   const [showForm, setShowForm] = useState({
     url: props.url,
@@ -37,6 +38,8 @@ function ManualForm(props) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    setSubmitted(true);
 
     axios.post(backendUrl+'/api/predict', {title: form.title, selftext: form.body})
       .then(response => {
@@ -60,11 +63,11 @@ function ManualForm(props) {
         <Verdict data-testid="verdict" title={showForm.title} body={showForm.body} prediction={prediction} probability={probability}/>
       )
     } else if (submitted && showForm.title) {
-      return(
-        <div className="load-spinner" />
-      )
+        return(
+          <div className="load-spinner" />
+        )
     } else {
-      return (<div />);
+        return (<div />);
     }
   }
 
