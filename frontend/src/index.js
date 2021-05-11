@@ -6,6 +6,8 @@ import reportWebVitals from './reportWebVitals';
 import axios from "axios";
 import ArticleForm from './components/sections/ArticleForm';
 
+const backendUrl = "http://localhost:8000";
+
 //The form components for manual user input
 function ManualForm(props) {
   const [header, setHeader] = useState(props.header);
@@ -36,7 +38,7 @@ function ManualForm(props) {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    axios.post('http://localhost:8000/api/predict', {title: form.title, selftext: form.body})
+    axios.post(backendUrl+'/api/predict', {title: form.title, selftext: form.body})
       .then(response => {
         setPrediction(response.data.prediction);
         setProbability(response.data.proba);
@@ -122,7 +124,7 @@ function InputtedForm(props) {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    axios.post('http://localhost:8000/api/predict', {title: form.title, selftext: form.body})
+    axios.post(backendUrl+'/api/predict', {title: form.title, selftext: form.body})
       .then(response => {
         setPrediction(response.data.prediction);
         setProbability(response.data.proba);
@@ -215,7 +217,7 @@ function UrlForm(props){
     e.preventDefault();
     resetForm();
 
-    axios.post('http://localhost:8000/api/link-info', {link:url.url})
+    axios.post(backendUrl+'/api/link-info', {link:url.url})
       .then(response => {
         if(response.data.title != null){
           setTitle(response.data.title);
@@ -276,7 +278,7 @@ function UrlForm(props){
 }
 
 export default UrlForm;
-export {InputtedForm, ManualForm, Verdict};
+export {InputtedForm, ManualForm, Verdict, backendUrl};
 
 
 ReactDOM.render(

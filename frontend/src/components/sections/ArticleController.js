@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import axios from "axios";
 import Article from "../Article";
-import './ArticleController.css'
+import './ArticleController.css';
+import {backendUrl} from "../../index";
 
 //Controller to display articles 
 function ArticleController(props){
@@ -13,7 +14,7 @@ function ArticleController(props){
     const [rendered, setRendered] = useState(false);
 
     useEffect(() => {
-      axios.get("http://localhost:8000/api/news-feed")
+      axios.get(backendUrl+"/api/news-feed")
         .then(response => response.data)
         .then((data) => {
           setCount(data.count)
