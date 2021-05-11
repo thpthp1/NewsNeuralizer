@@ -186,7 +186,9 @@ function Verdict(props){
     <div className="article card h-100 shadow bg-white rounded">
       <div className="card-body d-flex flex-column">
         <h2 data-testid="title" className="card-title">{props.title}</h2>
-        <p data-testid="predictionAndProbability" className="probability">{props.prediction} {isNaN(props.probability) ? props.probability : parseFloat(props.probability * 100).toFixed(0) + '%'}</p>
+        <div className="probability-container" style={{background: props.prediction === 'True' ? 'green' : 'red'}}>
+          <p data-testid="predictionAndProbability" className="probability">{props.prediction} {isNaN(props.probability) ? props.probability : parseFloat(props.probability * 100).toFixed(0) + '%'}</p>
+        </div>
         <p data-testid="body" className="card-text">{props.body}</p>
       </div>
     </div>
