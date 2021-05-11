@@ -19,14 +19,12 @@ from .core.news_scrape import PROC_COUNT, news_feed
 from .core.news_predict import news_predict
 from .core.ml.classifier import predict
 from newsplease import NewsArticle
-from .tasks import update_news
 
 PAGES_LOOKUP = 3
 REQUEST_WAIT_TIME = 0.5
 loggger = logging.getLogger('django')
 TIMEOUT = 5 * 60 
 PROC_COUNT = 3
-
 
 @api_view(['POST'])
 def predict_text(request):

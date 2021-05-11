@@ -37,18 +37,18 @@ def _article(link: str):
         article = newsplease.NewsPlease.from_url(url=link)
         if article.maintext is None:
             return
-        News.objects.update_or_create(text=article.maintext, 
+        news = News(text=article.maintext, 
                     title=article.title,
                     url=article.url,
                     image=article.image_url,
                     date_publish=article.date_publish,
                     source_domain=article.source_domain)
+        news.save()
     # print(article.title)
     # print(article.source_domain)
     return article
 
 def news_feed() -> List[NewsArticle.NewsArticle]:
-    print("Start scrape")
     articles = []
     links = []
     for source in FEED_JSON["sources"]:
