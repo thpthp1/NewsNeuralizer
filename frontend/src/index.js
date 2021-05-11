@@ -59,10 +59,12 @@ function ManualForm(props) {
       return(
         <Verdict data-testid="verdict" title={showForm.title} body={showForm.body} prediction={prediction} probability={probability}/>
       )
-    }else{
+    } else if (submitted && showForm.title) {
       return(
-        <h1></h1>
+        <div className="load-spinner" />
       )
+    } else {
+      return (<div />);
     }
   }
 
