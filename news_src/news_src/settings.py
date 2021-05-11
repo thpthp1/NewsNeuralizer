@@ -37,10 +37,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'api',
     'corsheaders',
     'rest_framework',
+    'workers',    
+    'api',
 ]
+
+BACKGROUND_TASK_RUN_ASYNC = True
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
