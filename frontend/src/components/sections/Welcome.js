@@ -7,7 +7,7 @@ function Welcome() {
         <div className='welcome-container'>
             <video src="./videos/intro-bg.mp4" autoPlay loop muted />
             <h1>News Neuralizer</h1>
-            <p>Easy Fake News Prediction</p>
+            <p>Easy News Bias Prediction</p>
         </div>
     )
 }
