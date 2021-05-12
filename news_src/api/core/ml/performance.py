@@ -9,6 +9,11 @@ LABEL_COL = 'label'
 
 
 def train_full(df):
+    """
+    Trains a NewsClassifier on the full dataset
+    :param df: input dataframe
+    :return: classifier and evaluation metrics
+    """
     true_classes = []
     conf_levels = []
     num_examples = df.shape[0]
@@ -20,6 +25,13 @@ def train_full(df):
 
 
 def train_5fold(df, clf=LogisticRegression(), print_enabled=False):
+    """
+    Trains a NewsClassifier using 5-fold CV
+    :param df: input dataframe
+    :param clf: type of classifier
+    :param print_enabled: Print out information or not
+    :return: classifier and evaluation metrics
+    """
     folds_list = create_folds(df)
     accuracy_list = []
     precision_list = []
@@ -58,9 +70,18 @@ def train_5fold(df, clf=LogisticRegression(), print_enabled=False):
 
 
 def train_test(training_df, testing_df, true_classes, conf_levels, clf=LogisticRegression()):
+    """
+    Trains and test a classifier
+    :param training_df: Training dataset
+    :param testing_df: Test dataset
+    :param true_classes: array of true labels
+    :param conf_levels: Confidence estimates
+    :param clf: type of classifier
+    :return: classifier and evaluation metrics
+    """
 
     # Train classifier
-    classifier = NewsClassifier(clf=clf) #NeuralNewsClassifier()
+    classifier = NewsClassifier(clf=clf)
     classifier.train(training_df[NEWS_COL], training_df[LABEL_COL])
 
     # Test classifier

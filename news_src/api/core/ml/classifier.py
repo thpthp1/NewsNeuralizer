@@ -73,6 +73,11 @@ def load_dataset2():
 
 
 def preprocess_text(df):
+    """
+    Preprocess datasets
+    :param df: input dataset
+    :return: preprocessed dataframe
+    """
     wnl = WordNetLemmatizer()
     sw = stopwords.words('english')
 
@@ -109,26 +114,3 @@ def predict(news_arr):
     labels, confs = cl.predict(news[NEWS_COL])
     return labels, confs
 
-
-if __name__ == '__main__':
-    # df = load_data()
-    # preprocess_text(df)
-
-    '''
-    df = pickle.load(open('preproc_data_all', 'rb'))
-
-    # Train
-    classifier, acc, prec, rec, auc_val = train_full(df)
-    print('Trained :', acc, prec, rec, auc_val)
-    save_model(classifier)
-    '''
-
-    classifier = load_model()
-    # Predict
-    # input should be an array. Each element is a single news (title + body)
-    r = open('test_real.txt', 'r').read()
-    f = open('test_fake.txt', 'r').read()
-    news = pd.DataFrame(data=[r, f], columns=[NEWS_COL])
-    preprocess_text(news)
-    labels, confs = classifier.predict(news[NEWS_COL])
-    print(labels, confs)

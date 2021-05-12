@@ -4,6 +4,10 @@ from sklearn.naive_bayes import MultinomialNB
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import AdaBoostClassifier
 
+''''
+Print out evaluation metrics for different classifiers
+'''
+
 
 def dataset_analysis(df):
     print('Total examples:', df.shape[0])
@@ -27,15 +31,9 @@ df1 = load_dataset1()
 df2 = load_dataset2()
 df = pd.concat([df1, df2], ignore_index=True)
 
+df = preprocess_text(df)
 
-# print('Preprocessing data...')
-preprocess_text(df)
-pickle.dump(df, open('preproc_data_all', 'wb'))
-# df = pickle.load(open('preproc_data_all', 'rb'))
-
-'''
 train('Logistic Regression', df, LogisticRegression())
 train('Naive Bayes', df, MultinomialNB())
 train('Decision Tree', df, DecisionTreeClassifier())  # With gini
 train('Adaboost', df, AdaBoostClassifier())
-'''

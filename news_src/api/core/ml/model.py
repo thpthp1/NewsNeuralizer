@@ -6,6 +6,9 @@ from sklearn.linear_model import LogisticRegression
 
 
 class NewsClassifier:
+    """
+    Trains and predicts whether a news article is fake or not
+    """
     def __init__(self, clf=LogisticRegression()):
         self.cv = CountVectorizer()
         self.tfidf = TfidfTransformer(norm="l2")
@@ -25,8 +28,8 @@ class NewsClassifier:
     def predict(self, new_examples):
         """
         Predicts a set of pre-processed news
-        :param new_examples:
-        :return:
+        :param new_examples: novel examples
+        :return: array of labels and confidence values
         """
         new_counts = self.cv.transform(new_examples)
         new_tfidf = self.tfidf.transform(new_counts)
@@ -45,7 +48,12 @@ class NewsClassifier:
         return labels, conf
 
     def __vectorize(self, examples):
-        # Transform words into numbers (counts for each word)
+        """
+        Transform words into numbers (counts for each word)
+        :param examples: input news articles
+        :return: TF-IDF matrix
+        """
+
         # Rows are news, cols are indices of unique words a[i][j]: frequency
         freq_matrix = self.cv.fit_transform(examples)
 
